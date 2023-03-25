@@ -1,2 +1,4 @@
 django
 psycopg2
+djangorestframework
+djangorestframework-simplejwt
