@@ -76,3 +76,4 @@ class ModelsTestCase(TestCase):
 
         self.assertEqual(l3.duration, 2)
         self.assertEqual(l3.from_date, "2023-02-01")
+        self.assertEqual(l3.apt.id, Apartment.objects.get(zip_code="6816315").id)
