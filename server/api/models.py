@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.core.exceptions import ValidationError
@@ -72,33 +73,37 @@ class Listing(models.Model):
     class Meta:
         db_table = "listings"
 
-    def activate(self):
-        if self.is_active:
+    def set_active(self, status: bool):
+        if self.is_active == status:
             return
-        Listing.objects.filter(pk=self.pk).update(is_active=True)
-        self.is_active = True
+        Listing.objects.filter(pk=self.pk).update(is_active=status)
+        self.is_active = status
 
     def save(self, *args, **kwargs):
         # Convert from_date and to_date to "YYYY-MM-DD" format, which is saveable in DB and Django
-        if "/" in self.from_date:
-            self.from_date = datetime.strptime(self.from_date, "%d/%m/%Y").strftime(
-                "%Y-%m-%d"
-            )
-        if "/" in self.to_date:
-            self.to_date = datetime.strptime(self.to_date, "%d/%m/%Y").strftime(
-                "%Y-%m-%d"
-            )
-        if not self.duration:
-            self.duration = (
-                datetime.strptime(self.to_date, "%Y-%m-%d")
-                - datetime.strptime(self.from_date, "%Y-%m-%d")
-            ).days
-        # Check if a Listing instance with the same Apartment instance and dates is already present
-        if Listing.objects.filter(
-            apt=self.apt, from_date=self.from_date, to_date=self.to_date
-        ).exists():
-            raise ValidationError(
-                "You're trying to save an already existant listing object."
-            )
+        try:
+            if "/" in self.from_date:
+                self.from_date = datetime.strptime(self.from_date, "%d/%m/%Y").strftime(
+                    "%Y-%m-%d"
+                )
+            if "/" in self.to_date:
+                self.to_date = datetime.strptime(self.to_date, "%d/%m/%Y").strftime(
+                    "%Y-%m-%d"
+                )
+            if not self.duration:
+                self.duration = (
+                    datetime.strptime(self.to_date, "%Y-%m-%d")
+                    - datetime.strptime(self.from_date, "%Y-%m-%d")
+                ).days
+        except ValueError:
+            raise ValidationError("Date must be in DD/MM/YYYY format.")
+
+        # Check if there are any existing listings with overlapping dates
+        overlapping_listings = Listing.objects.filter(
+            Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
+            apt=self.apt,
+        )
+        if overlapping_listings.exists():
+            raise ValidationError("The listing dates overlap with an existing listing.")
 
         super().save(*args, **kwargs)
