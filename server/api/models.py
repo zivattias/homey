@@ -3,7 +3,12 @@ from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator, MinLengthValidator
+from django.core.validators import (
+    RegexValidator,
+    MinLengthValidator,
+    MinValueValidator,
+    MaxValueValidator,
+)
 from django.core.exceptions import ValidationError
 
 from .utils.consts import IL_ZIPCODE_REGEX
@@ -14,12 +19,21 @@ from .utils.consts import IL_ZIPCODE_REGEX
 # Apartment, Listing, Proposal, Attribute, LikedApartment, Review
 
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    liked_apartments = models.ManyToManyField("Apartment", through="LikedApartments")
+
+    class Meta:
+        db_table = "user_profiles"
+
+
 class Apartment(models.Model):
     user = models.ForeignKey(
         db_column="user_id",
         to=User,
         on_delete=models.RESTRICT,
         verbose_name="User ID",
+        related_name="apartments"
     )
     street = models.CharField(
         db_column="street",
@@ -45,6 +59,9 @@ class Apartment(models.Model):
     square_meter = models.IntegerField(
         db_column="square_meter", verbose_name="Square Meter"
     )
+
+    # Many-to-Many relationship w/ User thru LikedApartments:
+    liked_by_users = models.ManyToManyField(User, through="LikedApartments", related_name="liked_apartments")
 
     def has_active_listing(self):
         return self.listings.filter(is_active=True).exists()
@@ -107,3 +124,69 @@ class Listing(models.Model):
             raise ValidationError("The listing dates overlap with an existing listing.")
 
         super().save(*args, **kwargs)
+
+
+class Attribute(models.Model):
+    class Meta:
+        db_table = "attributes"
+
+    apt = models.ForeignKey(
+        Apartment,
+        on_delete=models.CASCADE,
+        db_column="apt_id",
+        related_name="attributes",
+    )
+    pet_friendly = models.BooleanField(db_column="pet_friendly", default=False)
+    smoke_friendly = models.BooleanField(db_column="smoke_friendly", default=False)
+    is_wifi = models.BooleanField(db_column="is_wifi", default=False)
+    is_balcony = models.BooleanField(db_column="is_balcony", default=False)
+    is_parking = models.BooleanField(db_column="is_parking", default=False)
+
+
+class Proposal(models.Model):
+    sender_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="sent_proposals"
+    )
+    owner_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="received_proposals"
+    )
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, db_column="apt")
+    is_active = models.BooleanField(db_column="is_active", default=False)
+
+    class Meta:
+        unique_together = (
+            "sender_user",
+            "apartment",
+        )
+        db_table = "proposals"
+
+
+class Review(models.Model):
+    apartment = models.ForeignKey(
+        Apartment, on_delete=models.CASCADE, related_name="reviews"
+    )
+    sender_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stars = models.DecimalField(
+        db_column="stars",
+        validators=[MinValueValidator(0), MaxValueValidator(5.0)],
+        decimal_places=1,
+        max_digits=2,
+    )
+    text = models.TextField(max_length=400, validators=[MinLengthValidator(32)])
+
+    class Meta:
+        db_table = "reviews"
+        unique_together = (
+            "sender_user",
+            "apartment",
+        )
+
+
+class LikedApartments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "liked_apartments"
+        unique_together = ("user", "apartment")
