@@ -16,12 +16,29 @@ from .utils.consts import IL_ZIPCODE_REGEX
 # Create your models here.
 
 # Backend models:
-# Apartment, Listing, Proposal, Attribute, LikedApartment, Review
+# Apartment, Listing, Proposal, Attribute, LikedApartments, Review
+
+__all__ = [
+    "Apartment",
+    "Listing",
+    "Proposal",
+    "Attribute",
+    "LikedApartments",
+    "Review",
+    "UserProfile",
+]
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    liked_apartments = models.ManyToManyField("Apartment", through="LikedApartments")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="user_profile"
+    )
+    liked_apartments = models.ManyToManyField(
+        "Apartment",
+        through="LikedApartments",
+        through_fields=("user_profile", "apartment"),
+        default=None,
+    )
 
     class Meta:
         db_table = "user_profiles"
@@ -33,7 +50,7 @@ class Apartment(models.Model):
         to=User,
         on_delete=models.RESTRICT,
         verbose_name="User ID",
-        related_name="apartments"
+        related_name="apartments",
     )
     street = models.CharField(
         db_column="street",
@@ -61,7 +78,9 @@ class Apartment(models.Model):
     )
 
     # Many-to-Many relationship w/ User thru LikedApartments:
-    liked_by_users = models.ManyToManyField(User, through="LikedApartments", related_name="liked_apartments")
+    liked_by_users = models.ManyToManyField(
+        User, through="LikedApartments", related_name="liked_apartments"
+    )
 
     def has_active_listing(self):
         return self.listings.filter(is_active=True).exists()

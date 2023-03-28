@@ -26,3 +26,7 @@ class AuthTestCase(TestCase):
 
         self.assertContains(response, "refresh", 1, status_code=status.HTTP_200_OK)
         self.assertContains(response, "access", 1, status_code=status.HTTP_200_OK)
+
+    def test_get_user(self):
+        url = reverse("get_user")
+        
