@@ -1,12 +1,11 @@
 from django.test import TestCase
 
 # Create your tests here.
-
-from ..models import Listing, Apartment, User
+from ..models import Apartment, Listing, User
 from django.core.exceptions import ValidationError
 
 
-class UserModelTestCase(TestCase):
+class ModelsTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(
@@ -53,7 +52,7 @@ class UserModelTestCase(TestCase):
 
         self.assertEqual(listing.duration, 10)
         self.assertFalse(listing.is_active)
-        listing.activate()
+        listing.set_active(status=True)
         self.assertTrue(listing.is_active)
 
         with self.assertRaises(ValidationError):
@@ -71,8 +70,9 @@ class UserModelTestCase(TestCase):
             title="Amazing apartment in North TLV!",
             description="Great location, 5 min walk from the beach!",
             price=5000,
-            from_date="11/02/2023",
-            to_date="20/02/2023",
+            from_date="1/02/2023",
+            to_date="3/02/2023",
         )
 
-        self.assertEqual(l3.duration, 9)
+        self.assertEqual(l3.duration, 2)
+        self.assertEqual(l3.from_date, "2023-02-01")
