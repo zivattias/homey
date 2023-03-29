@@ -6,12 +6,14 @@ from rest_framework.routers import DefaultRouter
 
 from django.urls import path
 
+from ..viewsets.ListingViewSet import ListingViewSet
 from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
 from ..viewsets.UserViewSets import UserProfileView
 from ..viewsets.ApartmentViewSets import ApartmentViewSet, like_apartment
 
 router = DefaultRouter()
 router.register(r"apartments", viewset=ApartmentViewSet)
+router.register(r"listings", viewset=ListingViewSet)
 
 urlpatterns = [
     path("auth/register/", RegistrationView.as_view(), name="register"),

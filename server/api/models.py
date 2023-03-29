@@ -117,22 +117,22 @@ class Listing(models.Model):
 
     def save(self, *args, **kwargs):
         # Convert from_date and to_date to "YYYY-MM-DD" format, which is saveable in DB and Django
-        try:
-            if "/" in self.from_date:
-                self.from_date = datetime.strptime(self.from_date, "%d/%m/%Y").strftime(
-                    "%Y-%m-%d"
-                )
-            if "/" in self.to_date:
-                self.to_date = datetime.strptime(self.to_date, "%d/%m/%Y").strftime(
-                    "%Y-%m-%d"
-                )
-            if not self.duration:
-                self.duration = (
-                    datetime.strptime(self.to_date, "%Y-%m-%d")
-                    - datetime.strptime(self.from_date, "%Y-%m-%d")
-                ).days
-        except ValueError:
-            raise ValidationError("Date must be in DD/MM/YYYY format.")
+        # try:
+        #     if "/" in self.from_date:
+        #         self.from_date = datetime.strptime(self.from_date, "%d/%m/%Y").strftime(
+        #             "%Y-%m-%d"
+        #         )
+        #     if "/" in self.to_date:
+        #         self.to_date = datetime.strptime(self.to_date, "%d/%m/%Y").strftime(
+        #             "%Y-%m-%d"
+        #         )
+        #     if not self.duration:
+        #         self.duration = (
+        #             datetime.strptime(self.to_date, "%Y-%m-%d")
+        #             - datetime.strptime(self.from_date, "%Y-%m-%d")
+        #         ).days
+        # except ValueError:
+        #     raise ValidationError("Date must be in DD/MM/YYYY format.")
 
         # Check if there are any existing listings with overlapping dates
         overlapping_listings = Listing.objects.filter(

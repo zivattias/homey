@@ -1,21 +1,22 @@
 from ..models import Listing
+from ..serializers.ApartmentSerializer import ApartmentSerializer
 from rest_framework import serializers
 
 
 class CreateListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
-        exclude = ("duration", "active")
-        read_only_fields = ("duration", "active")
+        exclude = ("duration", "is_active")
+        read_only_fields = ("duration", "is_active")
 
-    from_date = serializers.DateField(
-        format="%d/%m/%Y",
-        error_messages={"format": "Date format must be in DD/MM/YYYY format."},
-    )
-    to_date = serializers.DateField(
-        format="%d/%m/%Y",
-        error_messages={"format": "Date format must be in DD/MM/YYYY format."},
-    )
+    # from_date = serializers.DateField(
+    #     format="%d/%m/%Y",
+    #     error_messages={"format": "Date format must be in DD/MM/YYYY format."},
+    # )
+    # to_date = serializers.DateField(
+    #     format="%d/%m/%Y",
+    #     error_messages={"format": "Date format must be in DD/MM/YYYY format."},
+    # )
 
     def validate(self, data):
         if "from_date" not in data or "to_date" not in data:
@@ -27,8 +28,9 @@ class CreateListingSerializer(serializers.ModelSerializer):
         to_date = data["to_date"]
         apt = data["apt"]
 
-
-        if Listing.objects.filter(apt=apt, from_date=from_date, to_date=to_date).exists():
+        if Listing.objects.filter(
+            apt=apt, from_date=from_date, to_date=to_date
+        ).exists():
             raise serializers.ValidationError(
                 "A listing with the given from_date and to_date already exists."
             )
@@ -47,4 +49,3 @@ class CreateListingSerializer(serializers.ModelSerializer):
         listing = Listing.objects.create(**validated_data)
         listing.save()
         return listing
-
