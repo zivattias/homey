@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
-from ..serializers.user_data import UserSerializer
+from ..serializers.UserSerializer import UserSerializer
 
 
 # Get self user data, available for authenticated User

@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 
-from ..serializers.apartment import ApartmentSerializer
+from ..serializers.ApartmentSerializer import ApartmentSerializer
 from ..models import Apartment, LikedApartments
 
 

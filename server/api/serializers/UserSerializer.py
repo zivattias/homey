@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from ..models import UserProfile
-from .apartment import LikedApartmentsSerializer
+from .ApartmentSerializer import LikedApartmentsSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):

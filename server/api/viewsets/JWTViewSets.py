@@ -2,7 +2,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from ..serializers.user_registration import RegistrationSerializer
+from ..serializers.RegistrationSerializer import RegistrationSerializer
 
 
 # Registration serializer

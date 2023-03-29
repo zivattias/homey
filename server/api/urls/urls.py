@@ -6,9 +6,9 @@ from rest_framework.routers import DefaultRouter
 
 from django.urls import path
 
-from ..viewsets.jwt import RegistrationView, BlacklistView
-from ..viewsets.user import UserProfileView
-from ..viewsets.apartment import ApartmentViewSet, like_apartment
+from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
+from ..viewsets.UserViewSets import UserProfileView
+from ..viewsets.ApartmentViewSets import ApartmentViewSet, like_apartment
 
 router = DefaultRouter()
 router.register(r"apartments", viewset=ApartmentViewSet)
