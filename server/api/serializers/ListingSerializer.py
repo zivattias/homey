@@ -7,7 +7,7 @@ class CreateListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
         exclude = ("duration", "is_active")
-        read_only_fields = ("duration", "is_active")
+        read_only_fields = ("is_active",)
 
     # from_date = serializers.DateField(
     #     format="%d/%m/%Y",
@@ -46,6 +46,5 @@ class CreateListingSerializer(serializers.ModelSerializer):
         from_date = validated_data.pop("from_date")
         to_date = validated_data.pop("to_date")
         validated_data["duration"] = (to_date - from_date).days
-        listing = Listing.objects.create(**validated_data)
-        listing.save()
+        listing = Listing.objects.create(from_date=from_date, to_date=to_date, **validated_data)
         return listing

@@ -99,8 +99,8 @@ class Listing(models.Model):
     title = models.CharField(db_column="title", max_length=128)
     description = models.TextField(db_column="description")
     price = models.DecimalField(db_column="price", max_digits=5, decimal_places=0)
-    from_date = models.DateField(db_column="from_date")
-    to_date = models.DateField(db_column="to_date")
+    from_date = models.DateTimeField(db_column="from_date")
+    to_date = models.DateTimeField(db_column="to_date")
     duration = models.PositiveIntegerField(
         db_column="duration", null=True, blank=True, default=0
     )
@@ -135,12 +135,12 @@ class Listing(models.Model):
         #     raise ValidationError("Date must be in DD/MM/YYYY format.")
 
         # Check if there are any existing listings with overlapping dates
-        overlapping_listings = Listing.objects.filter(
-            Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
-            apt=self.apt,
-        )
-        if overlapping_listings.exists():
-            raise ValidationError("The listing dates overlap with an existing listing.")
+        # overlapping_listings = Listing.objects.filter(
+        #     Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
+        #     apt=self.apt,
+        # )
+        # if overlapping_listings.exists():
+        #     raise ValidationError("The listing dates overlap with an existing listing.")
 
         super().save(*args, **kwargs)
 

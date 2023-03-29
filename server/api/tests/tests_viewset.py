@@ -2,9 +2,10 @@ from datetime import datetime
 import json
 from django.contrib.auth.models import User
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
-from ..models import Apartment
+from ..models import Apartment, Listing
 
 
 class ListingViewSetTest(APITestCase):
@@ -35,9 +36,10 @@ class ListingViewSetTest(APITestCase):
                 "description": "Test desc.",
                 "price": 5000,
                 "from_date": str(datetime.now().isoformat()),
-                "to_date": str(datetime(year=2023, month=4, day=5).isoformat()),
+                "to_date": str(datetime(year=2023, month=4, day=20).isoformat()),
             }
         )
-        response = self.client.post("/api/listings/", data=data, content_type="application/json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
+        response: Response = self.client.post(
+            "/api/listings/", data=data, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
