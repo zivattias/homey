@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -32,12 +30,6 @@ __all__ = [
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="user_profile"
-    )
-    liked_apartments = models.ManyToManyField(
-        "Apartment",
-        through="LikedApartments",
-        through_fields=("user_profile", "apartment"),
-        default=None,
     )
 
     class Meta:
@@ -116,32 +108,13 @@ class Listing(models.Model):
         self.is_active = status
 
     def save(self, *args, **kwargs):
-        # Convert from_date and to_date to "YYYY-MM-DD" format, which is saveable in DB and Django
-        # try:
-        #     if "/" in self.from_date:
-        #         self.from_date = datetime.strptime(self.from_date, "%d/%m/%Y").strftime(
-        #             "%Y-%m-%d"
-        #         )
-        #     if "/" in self.to_date:
-        #         self.to_date = datetime.strptime(self.to_date, "%d/%m/%Y").strftime(
-        #             "%Y-%m-%d"
-        #         )
-        #     if not self.duration:
-        #         self.duration = (
-        #             datetime.strptime(self.to_date, "%Y-%m-%d")
-        #             - datetime.strptime(self.from_date, "%Y-%m-%d")
-        #         ).days
-        # except ValueError:
-        #     raise ValidationError("Date must be in DD/MM/YYYY format.")
-
         # Check if there are any existing listings with overlapping dates
-        # overlapping_listings = Listing.objects.filter(
-        #     Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
-        #     apt=self.apt,
-        # )
-        # if overlapping_listings.exists():
-        #     raise ValidationError("The listing dates overlap with an existing listing.")
-
+        overlapping_listings = Listing.objects.filter(
+            Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
+            apt=self.apt,
+        )
+        if overlapping_listings.exists():
+            raise ValidationError("The listing dates overlap with an existing listing.")
         super().save(*args, **kwargs)
 
 
@@ -173,10 +146,15 @@ class Proposal(models.Model):
     is_active = models.BooleanField(db_column="is_active", default=False)
 
     class Meta:
-        unique_together = (
-            "sender_user",
-            "apartment",
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "sender_user",
+                    "apartment",
+                ],
+                name="unique_user_proposals",
+            )
+        ]
         db_table = "proposals"
 
 
@@ -195,17 +173,29 @@ class Review(models.Model):
 
     class Meta:
         db_table = "reviews"
-        unique_together = (
-            "sender_user",
-            "apartment",
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "sender_user",
+                    "apartment",
+                ],
+                name="unique_user_review",
+            )
+        ]
 
 
 class LikedApartments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "liked_apartments"
-        unique_together = ("user", "apartment")
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "user",
+                    "apartment",
+                ],
+                name="unique_user_liked_apartments",
+            )
+        ]
