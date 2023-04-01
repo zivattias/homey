@@ -8,7 +8,7 @@ from django.urls import path
 
 from ..viewsets.ReviewViewSet import ReviewViewSet
 from ..viewsets.ProposalViewSet import ProposalViewSet
-from ..viewsets.ListingViewSet import ListingViewSet
+from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
 from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
 from ..viewsets.UserViewSets import UserProfileView
 from ..viewsets.ApartmentViewSets import ApartmentViewSet, like_apartment
@@ -26,4 +26,7 @@ urlpatterns = [
     path("auth/logout/", BlacklistView.as_view(), name="logout"),
     path("me/", UserProfileView, name="profile"),
     path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
+    path(
+        "listings/activate/<int:listing_id>/", activate_listing, name="activate_listing"
+    ),
 ] + router.urls

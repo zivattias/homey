@@ -18,3 +18,18 @@ class ProposalSerializer(serializers.ModelSerializer):
         )
         proposal.save()
         return proposal
+
+
+class UpdateProposalSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        return obj.id
+
+    class Meta:
+        model = Proposal
+        fields = (
+            "is_active",
+            "id",
+        )
+        read_only_fields = ("id",)

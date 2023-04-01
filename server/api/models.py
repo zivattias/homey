@@ -8,6 +8,7 @@ from django.core.validators import (
     MaxValueValidator,
 )
 from django.core.exceptions import ValidationError
+from django_extensions.db.models import TimeStampedModel
 
 from .utils.consts import IL_ZIPCODE_REGEX
 
@@ -103,7 +104,7 @@ class Listing(models.Model):
     duration = models.PositiveIntegerField(
         db_column="duration", null=True, blank=True, default=0
     )
-    is_active = models.BooleanField(db_column="is_active", default=False)
+    is_active = models.BooleanField(db_column="is_active", default=True)
 
     class Meta:
         db_table = "listings"
@@ -117,7 +118,9 @@ class Listing(models.Model):
     def save(self, *args, **kwargs):
         # Check if there are any existing listings with overlapping dates
         overlapping_listings = Listing.objects.filter(
-            Q(from_date__lte=self.to_date) & Q(to_date__gte=self.from_date),
+            Q(from_date__lte=self.to_date)
+            & Q(to_date__gte=self.from_date)
+            & ~Q(id=self.id),
             apt=self.apt,
         )
         if overlapping_listings.exists():
@@ -125,7 +128,7 @@ class Listing(models.Model):
         super().save(*args, **kwargs)
 
 
-class Proposal(models.Model):
+class Proposal(TimeStampedModel, models.Model):
     sender_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sent_proposals"
     )
@@ -133,7 +136,13 @@ class Proposal(models.Model):
         User, on_delete=models.CASCADE, related_name="received_proposals"
     )
     apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, db_column="apt")
-    is_active = models.BooleanField(db_column="is_active", default=False)
+    is_active = models.BooleanField(db_column="is_active", default=True)
+
+    def set_active(self, status: bool):
+        if self.is_active == status:
+            return
+        Proposal.objects.filter(pk=self.pk).update(is_active=status)
+        self.is_active = status
 
     class Meta:
         constraints = [
@@ -148,7 +157,7 @@ class Proposal(models.Model):
         db_table = "proposals"
 
 
-class Review(models.Model):
+class Review(TimeStampedModel, models.Model):
     apartment = models.ForeignKey(
         Apartment, on_delete=models.CASCADE, related_name="reviews"
     )
