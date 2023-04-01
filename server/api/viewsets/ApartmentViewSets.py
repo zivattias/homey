@@ -1,19 +1,25 @@
 from rest_framework.response import Response
-from rest_framework import status, generics, viewsets, permissions
-from rest_framework.decorators import api_view
+from rest_framework import status, viewsets, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 
 from ..serializers.ApartmentSerializer import ApartmentSerializer
 from ..models import Apartment, LikedApartments
+from ..permissions.ApartmentPermissions import ApartmentPermissions
 
 
 # Apartment viewset: CRUD
 class ApartmentViewSet(viewsets.ModelViewSet):
     serializer_class = ApartmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, ApartmentPermissions]
     authentication_classes = [JWTAuthentication]
-    queryset = Apartment.objects.all()
+    queryset = Apartment.objects.filter(is_deleted=False)
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Apartment.objects.all()
+        return self.queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -22,6 +28,12 @@ class ApartmentViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_deleted = True
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Like & unlike an apartment

@@ -20,7 +20,6 @@ __all__ = [
     "Apartment",
     "Listing",
     "Proposal",
-    "Attribute",
     "LikedApartments",
     "Review",
     "UserProfile",
@@ -79,6 +78,8 @@ class Apartment(models.Model):
     liked_by_users = models.ManyToManyField(
         User, through="LikedApartments", related_name="liked_apartments"
     )
+
+    is_deleted = models.BooleanField(default=False)
 
     def has_active_listing(self):
         return self.listings.filter(is_active=True).exists()

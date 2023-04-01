@@ -1,9 +1,10 @@
-
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets, permissions
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
+
+from ..permissions.ListingPermissions import ListingPermissions
 
 from ..serializers.ListingSerializer import CreateListingSerializer
 from ..models import Apartment, Listing
@@ -12,7 +13,7 @@ from ..models import Apartment, Listing
 # Listing viewset: CRUD
 class ListingViewSet(viewsets.ModelViewSet):
     serializer_class = CreateListingSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, ListingPermissions]
     authentication_classes = [JWTAuthentication]
     queryset = Listing.objects.all()
 

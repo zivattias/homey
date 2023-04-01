@@ -6,7 +6,7 @@ from ..models import LikedApartments, Apartment, Review
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
-    reviews = ReviewSerializer(many=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     def get_reviews(self, obj):
         return obj.reviews
