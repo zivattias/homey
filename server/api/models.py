@@ -14,7 +14,7 @@ from .utils.consts import IL_ZIPCODE_REGEX
 # Create your models here.
 
 # Backend models:
-# Apartment, Listing, Proposal, Attribute, LikedApartments, Review
+# Apartment, Listing, Proposal, LikedApartments, Review
 
 __all__ = [
     "Apartment",
@@ -69,6 +69,12 @@ class Apartment(models.Model):
         db_column="square_meter", verbose_name="Square Meter"
     )
 
+    pet_friendly = models.BooleanField(db_column="pet_friendly", default=False)
+    smoke_friendly = models.BooleanField(db_column="smoke_friendly", default=False)
+    is_wifi = models.BooleanField(db_column="is_wifi", default=False)
+    is_balcony = models.BooleanField(db_column="is_balcony", default=False)
+    is_parking = models.BooleanField(db_column="is_parking", default=False)
+
     # Many-to-Many relationship w/ User thru LikedApartments:
     liked_by_users = models.ManyToManyField(
         User, through="LikedApartments", related_name="liked_apartments"
@@ -116,23 +122,6 @@ class Listing(models.Model):
         if overlapping_listings.exists():
             raise ValidationError("The listing dates overlap with an existing listing.")
         super().save(*args, **kwargs)
-
-
-class Attribute(models.Model):
-    class Meta:
-        db_table = "attributes"
-
-    apt = models.ForeignKey(
-        Apartment,
-        on_delete=models.CASCADE,
-        db_column="apt_id",
-        related_name="attributes",
-    )
-    pet_friendly = models.BooleanField(db_column="pet_friendly", default=False)
-    smoke_friendly = models.BooleanField(db_column="smoke_friendly", default=False)
-    is_wifi = models.BooleanField(db_column="is_wifi", default=False)
-    is_balcony = models.BooleanField(db_column="is_balcony", default=False)
-    is_parking = models.BooleanField(db_column="is_parking", default=False)
 
 
 class Proposal(models.Model):

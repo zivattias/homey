@@ -1,14 +1,22 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 
-from ..models import UserProfile, LikedApartments, Apartment
+from .ReviewSerializer import ReviewSerializer
+
+from ..models import LikedApartments, Apartment, Review
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True)
+
+    def get_reviews(self, obj):
+        return obj.reviews
+
     class Meta:
         model = Apartment
         fields = "__all__"
-        extra_kwargs = {"user": {"required": False}}
+        extra_kwargs = {
+            "user": {"required": False},
+        }
 
 
 class LikedApartmentsSerializer(serializers.ModelSerializer):

@@ -1,5 +1,4 @@
 from ..models import Listing
-from ..serializers.ApartmentSerializer import ApartmentSerializer
 from rest_framework import serializers
 
 
@@ -8,15 +7,6 @@ class CreateListingSerializer(serializers.ModelSerializer):
         model = Listing
         exclude = ("duration", "is_active")
         read_only_fields = ("is_active",)
-
-    # from_date = serializers.DateField(
-    #     format="%d/%m/%Y",
-    #     error_messages={"format": "Date format must be in DD/MM/YYYY format."},
-    # )
-    # to_date = serializers.DateField(
-    #     format="%d/%m/%Y",
-    #     error_messages={"format": "Date format must be in DD/MM/YYYY format."},
-    # )
 
     def validate(self, data):
         if "from_date" not in data or "to_date" not in data:
@@ -37,8 +27,8 @@ class CreateListingSerializer(serializers.ModelSerializer):
 
         duration = to_date - from_date
 
-        if duration.days < 7:
-            raise serializers.ValidationError("The minimum duration is 7 days.")
+        if duration.days <= 0:
+            raise serializers.ValidationError("Negative value for duration is not acceptable.")
 
         return data
 
