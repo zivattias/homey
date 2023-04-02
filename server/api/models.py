@@ -36,7 +36,7 @@ class UserProfile(models.Model):
         db_table = "user_profiles"
 
 
-class Apartment(models.Model):
+class Apartment(TimeStampedModel, models.Model):
     user = models.ForeignKey(
         db_column="user_id",
         to=User,
@@ -89,7 +89,7 @@ class Apartment(models.Model):
         db_table = "apartments"
 
 
-class Listing(models.Model):
+class Listing(TimeStampedModel, models.Model):
     apt = models.ForeignKey(
         db_column="apt_id",
         to=Apartment,
