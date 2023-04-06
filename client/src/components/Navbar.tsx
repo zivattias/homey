@@ -11,12 +11,27 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { useTheme } from "@mui/material";
+import { ColorModeContext } from "../App";
+import { useUser } from "../utils/context/UserContext";
+import AuthModal from "./AuthModal";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Sublets", "Long-term", "Upload"];
+const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
+const loggedOutSettings = ["Login", "Register"];
 
 function Navbar() {
+    const [modalType, setModalType] = React.useState("");
+    const [openModal, setOpenModal] = React.useState(false);
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
+    const user = useUser();
+    const theme = useTheme();
+    const colorMode = React.useContext(ColorModeContext);
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null
     );
@@ -40,7 +55,10 @@ function Navbar() {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar
+            position="static"
+            sx={{ backgroundColor: "inherit", color: "inherit" }}
+        >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
@@ -51,7 +69,6 @@ function Navbar() {
                         sx={{
                             mr: 2,
                             display: { xs: "none", md: "flex" },
-                            fontFamily: "Poppins",
                             fontWeight: 700,
                             color: "inherit",
                             textDecoration: "none",
@@ -91,7 +108,7 @@ function Navbar() {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
-                                display: { xs: "block", md: "none" },
+                                display: { xs: "block", md: "flex" },
                             }}
                         >
                             {pages.map((page) => (
@@ -99,33 +116,55 @@ function Navbar() {
                                     key={page}
                                     onClick={handleCloseNavMenu}
                                 >
-                                    <Typography textAlign="center">
+                                    <Typography
+                                        color="inherit"
+                                        textTransform="capitalize"
+                                    >
                                         {page}
                                     </Typography>
                                 </MenuItem>
                             ))}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    width: "100%",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    bgcolor: "inherit",
+                                    color: "text.primary",
+                                    borderRadius: 1,
+                                    p: 3,
+                                }}
+                            >
+                                <IconButton
+                                    sx={{ ml: 1 }}
+                                    onClick={colorMode.toggleColorMode}
+                                    color="inherit"
+                                >
+                                    {theme.palette.mode === "dark" ? (
+                                        <DarkModeIcon />
+                                    ) : (
+                                        <LightModeIcon />
+                                    )}
+                                </IconButton>
+                            </Box>
                         </Menu>
                     </Box>
-                    <AdbIcon
-                        sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-                    />
                     <Typography
                         variant="h5"
                         noWrap
                         component="a"
-                        href=""
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: "flex", md: "none" },
                             flexGrow: 1,
-                            fontFamily: "monospace",
                             fontWeight: 700,
-                            letterSpacing: ".3rem",
                             color: "inherit",
                             textDecoration: "none",
                         }}
                     >
-                        LOGO
+                        Homey
                     </Typography>
                     <Box
                         sx={{
@@ -137,11 +176,50 @@ function Navbar() {
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: "white", display: "block" }}
+                                sx={{
+                                    textAlign: "center",
+                                    textTransform: "capitalize",
+                                    my: 2,
+                                    color: "inherit",
+                                    display: "block",
+                                }}
                             >
                                 {page}
                             </Button>
                         ))}
+                    </Box>
+
+                    <Box
+                        sx={{
+                            flexGrow: 0,
+                            display: { xs: "none", md: "flex" },
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                width: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                bgcolor: "inherit",
+                                color: "text.primary",
+                                borderRadius: 1,
+                                p: 3,
+                            }}
+                        >
+                            <IconButton
+                                sx={{ ml: 1 }}
+                                onClick={colorMode.toggleColorMode}
+                                color="inherit"
+                            >
+                                {theme.palette.mode === "dark" ? (
+                                    <DarkModeIcon />
+                                ) : (
+                                    <LightModeIcon />
+                                )}
+                            </IconButton>
+                            {/* {theme.palette.mode} mode */}
+                        </Box>
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
@@ -151,8 +229,7 @@ function Navbar() {
                                 sx={{ p: 0 }}
                             >
                                 <Avatar
-                                    alt="Remy Sharp"
-                                    src="/static/images/avatar/2.jpg"
+                                    alt="User profile picture" // TODO add src attr to Avatar component
                                 />
                             </IconButton>
                         </Tooltip>
@@ -172,16 +249,38 @@ function Navbar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem
-                                    key={setting}
-                                    onClick={handleCloseUserMenu}
-                                >
-                                    <Typography textAlign="center">
-                                        {setting}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
+                            {user.accessToken
+                                ? loggedInSettings.map((setting) => (
+                                      <MenuItem
+                                          key={setting}
+                                          onClick={handleCloseUserMenu}
+                                      >
+                                          <Typography textAlign="center">
+                                              {setting}
+                                          </Typography>
+                                      </MenuItem>
+                                  ))
+                                : loggedOutSettings.map((setting) => (
+                                      <MenuItem
+                                          key={setting}
+                                          onClick={() => {
+                                              handleOpenModal();
+                                              setModalType(setting);
+                                          }}
+                                      >
+                                          <Typography textAlign="center">
+                                              {setting}
+                                          </Typography>
+                                      </MenuItem>
+                                  ))}
+                            {openModal && modalType ? (
+                                <AuthModal
+                                    modalType={modalType}
+                                    open={openModal}
+                                    onClose={handleCloseModal}
+                                    children={<></>}
+                                />
+                            ) : null}
                         </Menu>
                     </Box>
                 </Toolbar>
