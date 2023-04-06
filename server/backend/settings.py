@@ -27,6 +27,9 @@ SECRET_KEY = "django-insecure-x*49*4c5r@%mq3y@5k%a@rco)914lwbr+-5ph(wfgm!=a5(5rp
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 
 # Application definition
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "corsheaders",
 ]
 
 REST_FRAMEWORK = {
@@ -50,7 +54,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    #TODO: change deltas prior to production
+    # TODO: change deltas prior to production
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=5),
     "REFRESH_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
@@ -58,6 +62,7 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
