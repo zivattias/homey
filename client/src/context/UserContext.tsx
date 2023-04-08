@@ -47,9 +47,11 @@ function userReducer(userState: User, action: UserAction) {
             };
         }
         case USER_ACTIONS.BLACKLIST: {
+            localStorage.removeItem("refreshToken");
             return INITIAL_USER_STATE;
         }
         case USER_ACTIONS.LOGIN: {
+            localStorage.setItem("refreshToken", action.payload!.refreshToken!);
             return {
                 ...userState,
                 accessToken: action.payload!.accessToken,

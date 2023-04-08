@@ -19,6 +19,7 @@ import { USER_ACTIONS, useUser, useUserDispatch } from "../context/UserContext";
 import AuthModal from "./AuthModal/AuthModal";
 import sendRequest from "../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
+import { Link } from "react-router-dom";
 
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -88,22 +89,22 @@ function Navbar() {
         >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: "none", md: "flex" },
-                            fontWeight: 700,
-                            color: "inherit",
-                            textDecoration: "none",
-                        }}
-                    >
-                        Homey
-                    </Typography>
-
+                    <Link to="/">
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            sx={{
+                                mr: 2,
+                                display: { xs: "none", md: "flex" },
+                                fontWeight: 700,
+                                color: "inherit",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Homey
+                        </Typography>
+                    </Link>
                     <Box
                         sx={{
                             flexGrow: 1,

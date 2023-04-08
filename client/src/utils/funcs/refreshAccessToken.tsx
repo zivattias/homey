@@ -19,7 +19,7 @@ async function refreshAccessToken(refreshToken: string) {
         });
         return response.data.access;
     }
-    return new Error("Invalid or expired refresh token, re-login.");
+    throw new Error("Invalid or expired refresh token, re-login.");
 }
 
 export default refreshAccessToken;

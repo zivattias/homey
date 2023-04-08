@@ -7,12 +7,17 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 import { ChakraProvider } from "@chakra-ui/react";
 import { UserProvider, useUser } from "./context/UserContext";
+import useLocalStorage from "./hooks/useLocalStorage";
+import sendRequest from "./utils/funcs/sendRequest";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
+import refreshAccessToken from "./utils/funcs/refreshAccessToken";
 
 export const ColorModeContext = React.createContext({
     toggleColorMode: () => {},
 });
 
 function App() {
+    const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`);
     const [mode, setMode] = React.useState<"light" | "dark">(
         prefersDarkMode ? "dark" : "light"
@@ -39,7 +44,12 @@ function App() {
             }),
         [mode]
     );
+    // if (refreshToken) {
+    //     const getAccessToken = async () => {
+    //         const response = await refreshAccessToken(refreshToken as string)
 
+    //     }
+    // }
     return (
         <UserProvider>
             <ChakraProvider>
