@@ -17,10 +17,13 @@ import { useTheme } from "@mui/material";
 import { ColorModeContext } from "../App";
 import { USER_ACTIONS, useUser, useUserDispatch } from "../context/UserContext";
 import AuthModal from "./AuthModal";
+import sendRequest from "../utils/funcs/sendRequest";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
 
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
 const loggedOutSettings = ["Login", "Register"];
+// TODO: add page/setting-to-function mapped object for better .map() below (hint: search for 'settings')
 
 function Navbar() {
     const [modalType, setModalType] = React.useState("");
@@ -29,6 +32,7 @@ function Navbar() {
     const handleCloseModal = () => setOpenModal(false);
 
     const user = useUser();
+    console.log(user);
     const dispatch = useUserDispatch();
     const theme = useTheme();
     const colorMode = React.useContext(ColorModeContext);
@@ -55,10 +59,26 @@ function Navbar() {
         setAnchorElUser(null);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        const response = await sendRequest(
+            "post",
+            FULL_API_ENDPOINT +
+                API_ENDPOINTS.AUTH.BASE +
+                API_ENDPOINTS.AUTH.LOGOUT,
+            user.accessToken!,
+            user.refreshToken!,
+            { refresh: user.refreshToken }
+        );
         dispatch({
             type: USER_ACTIONS.BLACKLIST,
+            payload: {
+                accessToken: user.accessToken,
+                refreshToken: user.refreshToken,
+            },
         });
+        if (response.status !== 200) {
+            throw new Error("Server-side error occurred");
+        }
     };
 
     return (
@@ -270,7 +290,10 @@ function Navbar() {
                                           key={setting}
                                           onClick={
                                               setting == "Logout"
-                                                  ? handleLogout
+                                                  ? () => {
+                                                        handleLogout();
+                                                        handleCloseUserMenu();
+                                                    }
                                                   : handleCloseUserMenu
                                           }
                                       >
@@ -283,6 +306,7 @@ function Navbar() {
                                       <MenuItem
                                           key={setting}
                                           onClick={() => {
+                                              handleCloseUserMenu();
                                               handleOpenModal();
                                               setModalType(setting);
                                           }}

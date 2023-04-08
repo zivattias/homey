@@ -29,7 +29,7 @@ async function sendRequest(
         }
     }
 
-    return response;
+    return response as AxiosResponse;
 }
 
 export default sendRequest;

@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
+import sendRequest from "../utils/funcs/sendRequest";
 
 type Nullable<T> = T | null | undefined;
 
@@ -45,7 +47,6 @@ function userReducer(userState: User, action: UserAction) {
             };
         }
         case USER_ACTIONS.BLACKLIST: {
-            // TODO: add request to blacklist endpoint @ API
             return INITIAL_USER_STATE;
         }
         case USER_ACTIONS.LOGIN: {
