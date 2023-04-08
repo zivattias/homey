@@ -16,7 +16,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useTheme } from "@mui/material";
 import { ColorModeContext } from "../App";
 import { USER_ACTIONS, useUser, useUserDispatch } from "../context/UserContext";
-import AuthModal from "./AuthModal";
+import AuthModal from "./AuthModal/AuthModal";
 import sendRequest from "../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
 
