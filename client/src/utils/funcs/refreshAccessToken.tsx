@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../consts";
-import { USER_ACTIONS, useUserDispatch } from "../context/UserContext";
+import { USER_ACTIONS, useUserDispatch } from "../../context/UserContext";
 
 async function refreshAccessToken(refreshToken: string) {
     const dispatch = useUserDispatch();

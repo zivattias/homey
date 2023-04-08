@@ -15,7 +15,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useTheme } from "@mui/material";
 import { ColorModeContext } from "../App";
-import { useUser } from "../utils/context/UserContext";
+import { USER_ACTIONS, useUser, useUserDispatch } from "../context/UserContext";
 import AuthModal from "./AuthModal";
 
 const pages = ["Sublets", "Long-term", "Upload"];
@@ -29,6 +29,7 @@ function Navbar() {
     const handleCloseModal = () => setOpenModal(false);
 
     const user = useUser();
+    const dispatch = useUserDispatch();
     const theme = useTheme();
     const colorMode = React.useContext(ColorModeContext);
 
@@ -52,6 +53,12 @@ function Navbar() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleLogout = () => {
+        dispatch({
+            type: USER_ACTIONS.BLACKLIST,
+        });
     };
 
     return (
@@ -230,7 +237,15 @@ function Navbar() {
                             >
                                 <Avatar
                                     alt="User profile picture" // TODO add src attr to Avatar component
-                                />
+                                >
+                                    {user.accessToken &&
+                                    user.firstName &&
+                                    user.lastName
+                                        ? `${user.firstName.charAt(
+                                              0
+                                          )}${user.lastName.charAt(0)}`
+                                        : null}
+                                </Avatar>
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -253,7 +268,11 @@ function Navbar() {
                                 ? loggedInSettings.map((setting) => (
                                       <MenuItem
                                           key={setting}
-                                          onClick={handleCloseUserMenu}
+                                          onClick={
+                                              setting == "Logout"
+                                                  ? handleLogout
+                                                  : handleCloseUserMenu
+                                          }
                                       >
                                           <Typography textAlign="center">
                                               {setting}

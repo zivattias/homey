@@ -17,11 +17,12 @@ export enum USER_ACTIONS {
     REFRESH_ACCESS_TOKEN = "refreshAccessToken",
     LOGIN = "login",
     BLACKLIST = "blacklist",
+    POPULATE = "populate",
 }
 
 interface UserAction {
     type: USER_ACTIONS;
-    payload: Partial<User> | User;
+    payload?: Partial<User> | User;
 }
 
 export const INITIAL_USER_STATE: User = {
@@ -40,26 +41,33 @@ function userReducer(userState: User, action: UserAction) {
         case USER_ACTIONS.REFRESH_ACCESS_TOKEN: {
             return {
                 ...userState,
-                accessToken: action.payload.accessToken,
+                accessToken: action.payload!.accessToken,
             };
         }
         case USER_ACTIONS.BLACKLIST: {
+            // TODO: add request to blacklist endpoint @ API
             return INITIAL_USER_STATE;
         }
         case USER_ACTIONS.LOGIN: {
             return {
-                id: action.payload.id,
-                username: action.payload.username,
-                firstName: action.payload.firstName,
-                lastName: action.payload.lastName,
-                email: action.payload.email,
-                isStaff: action.payload.isStaff,
-                accessToken: action.payload.accessToken,
-                refreshToken: action.payload.refreshToken,
+                ...userState,
+                accessToken: action.payload!.accessToken,
+                refreshToken: action.payload!.refreshToken,
+            };
+        }
+        case USER_ACTIONS.POPULATE: {
+            return {
+                ...userState,
+                id: action.payload!.id,
+                username: action.payload!.username,
+                firstName: action.payload!.firstName,
+                lastName: action.payload!.lastName,
+                email: action.payload!.email,
+                isStaff: action.payload!.isStaff,
             };
         }
         default: {
-            throw Error("Unknown action: " + action.type);
+            throw new Error("Unknown action: " + action.type);
         }
     }
 }

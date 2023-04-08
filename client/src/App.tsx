@@ -6,17 +6,13 @@ import NotFound from "./pages/NotFound";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 import { ChakraProvider } from "@chakra-ui/react";
-import refreshAccessToken from "./utils/funcs/refreshAccessToken";
-import { UserProvider, useUser } from "./utils/context/UserContext";
+import { UserProvider, useUser } from "./context/UserContext";
 
 export const ColorModeContext = React.createContext({
     toggleColorMode: () => {},
 });
 
 function App() {
-    const user = useUser();
-    console.log(user);
-    
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`);
     const [mode, setMode] = React.useState<"light" | "dark">(
         prefersDarkMode ? "dark" : "light"
