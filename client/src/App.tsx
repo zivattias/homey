@@ -6,12 +6,7 @@ import NotFound from "./pages/NotFound";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 import { ChakraProvider } from "@chakra-ui/react";
-import {
-    UserProvider,
-    USER_ACTIONS,
-    useUser,
-    useUserDispatch,
-} from "./context/UserContext";
+import { USER_ACTIONS, useUserDispatch } from "./context/UserContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 import sendRequest from "./utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
