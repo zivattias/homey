@@ -32,7 +32,7 @@ urlpatterns = [
     path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
     path(
         "apartments/<int:apt_id>/photos/",
-        ApartmentPhotoViewSet.as_view({"post": "create"}),
+        ApartmentPhotoViewSet.as_view({"post": "create", "get": "list"}),
         name="apartment_photos_create",
     ),
     path(

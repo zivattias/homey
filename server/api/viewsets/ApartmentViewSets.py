@@ -43,19 +43,22 @@ class ApartmentViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Apartment photo viewset: Create & Destroy
+# Apartment photo viewset: List, Create & Destroy
 class ApartmentPhotoViewSet(
-    viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
+    viewsets.GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
 ):
     serializer_class = ApartmentPhotosSerializer
     permission_classes = [ApartmentPhotoPermissions]
     authentication_classes = [JWTAuthentication]
     queryset = ApartmentPhoto.objects.all()
 
-    def get_queryset(self):
+    def get_queryset(self, apt_id):
         if self.request.user.is_staff:
             return self.queryset
-        return ApartmentPhoto.objects.filter(apt__user__id=self.request.user.id)
+        return ApartmentPhoto.objects.filter(apt__id=apt_id)
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -72,6 +75,20 @@ class ApartmentPhotoViewSet(
         instance = get_object_or_404(ApartmentPhoto, apt__id=apt_id, id=photo_id)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def list(self, request, *args, **kwargs):
+        apt_id = kwargs.get("apt_id")
+        queryset = self.get_queryset(apt_id=apt_id)
+
+        # page = self.paginate_queryset(queryset)
+
+        if len(queryset) != 0:
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 # Like & unlike an apartment
