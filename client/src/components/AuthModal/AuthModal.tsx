@@ -61,6 +61,7 @@ export default function AuthModal({
     const user = useUser();
     const dispatch = useUserDispatch();
     const [loading, setLoading] = React.useState<boolean>(false);
+    console.log(user);
 
     const getUserData = async () => {
         const userData = await sendRequest(
@@ -76,7 +77,6 @@ export default function AuthModal({
     };
 
     React.useEffect(() => {
-        console.log("Inside useEffect");
         if (user.accessToken && user.refreshToken) {
             const loadData = async () => {
                 const userData = await getUserData();

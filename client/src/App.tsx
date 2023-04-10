@@ -6,7 +6,12 @@ import NotFound from "./pages/NotFound";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
 import { ChakraProvider } from "@chakra-ui/react";
-import { UserProvider, useUser } from "./context/UserContext";
+import {
+    UserProvider,
+    USER_ACTIONS,
+    useUser,
+    useUserDispatch,
+} from "./context/UserContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 import sendRequest from "./utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
@@ -17,7 +22,45 @@ export const ColorModeContext = React.createContext({
 });
 
 function App() {
+    const dispatch = useUserDispatch();
     const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
+
+    React.useEffect(() => {
+        const getAccessToken = async () => {
+            const accessToken = await refreshAccessToken(
+                refreshToken as string
+            );
+            if (accessToken) {
+                dispatch({
+                    type: USER_ACTIONS.LOGIN,
+                    payload: {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken as string,
+                    },
+                });
+                const response = await sendRequest(
+                    "get",
+                    FULL_API_ENDPOINT + API_ENDPOINTS.ME,
+                    accessToken,
+                    refreshToken as string,
+                    {}
+                );
+                if (response) {
+                    dispatch({
+                        type: USER_ACTIONS.POPULATE,
+                        payload: {
+                            firstName: response.data.first_name,
+                            lastName: response.data.last_name,
+                            isStaff: response.data.is_staff,
+                            ...response.data,
+                        },
+                    });
+                }
+            }
+        };
+        getAccessToken();
+    }, []);
+
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`);
     const [mode, setMode] = React.useState<"light" | "dark">(
         prefersDarkMode ? "dark" : "light"
@@ -44,28 +87,21 @@ function App() {
             }),
         [mode]
     );
-    // if (refreshToken) {
-    //     const getAccessToken = async () => {
-    //         const response = await refreshAccessToken(refreshToken as string)
 
-    //     }
-    // }
     return (
-        <UserProvider>
-            <ChakraProvider>
-                <ColorModeContext.Provider value={colorMode}>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <Routes>
-                            <Route path="/" element={<Root />}>
-                                <Route index element={<HomePage />} />
-                                <Route path="*" element={<NotFound />} />
-                            </Route>
-                        </Routes>
-                    </ThemeProvider>
-                </ColorModeContext.Provider>
-            </ChakraProvider>
-        </UserProvider>
+        <ChakraProvider>
+            <ColorModeContext.Provider value={colorMode}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <Routes>
+                        <Route path="/" element={<Root />}>
+                            <Route index element={<HomePage />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
+                    </Routes>
+                </ThemeProvider>
+            </ColorModeContext.Provider>
+        </ChakraProvider>
     );
 }
 

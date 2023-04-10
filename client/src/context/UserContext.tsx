@@ -4,7 +4,7 @@ import sendRequest from "../utils/funcs/sendRequest";
 
 type Nullable<T> = T | null | undefined;
 
-interface User {
+export interface User {
     id: Nullable<number>;
     username: Nullable<string>;
     firstName: Nullable<string>;
@@ -76,9 +76,9 @@ function userReducer(userState: User, action: UserAction) {
 }
 
 const UserContext = React.createContext(INITIAL_USER_STATE);
-const UserDispatchContext = React.createContext(
-    (() => {}) as React.Dispatch<UserAction>
-);
+const UserDispatchContext = React.createContext((() => {
+    throw new Error("Forgot to wrap component in UserProvider");
+}) as React.Dispatch<UserAction>);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const [userState, dispatch] = React.useReducer(

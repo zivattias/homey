@@ -33,8 +33,14 @@ function Navbar() {
     const handleCloseModal = () => setOpenModal(false);
 
     const user = useUser();
-    console.log(user);
     const dispatch = useUserDispatch();
+
+    React.useEffect(() => {}, [
+        user.accessToken,
+        user.firstName,
+        user.lastName,
+    ]);
+
     const theme = useTheme();
     const colorMode = React.useContext(ColorModeContext);
 
