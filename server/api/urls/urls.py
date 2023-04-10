@@ -11,7 +11,11 @@ from ..viewsets.ProposalViewSet import ProposalViewSet
 from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
 from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
 from ..viewsets.UserViewSets import UserProfileView
-from ..viewsets.ApartmentViewSets import ApartmentViewSet, like_apartment
+from ..viewsets.ApartmentViewSets import (
+    ApartmentViewSet,
+    like_apartment,
+    ApartmentPhotoViewSet,
+)
 
 router = DefaultRouter()
 router.register(r"apartments", viewset=ApartmentViewSet)
@@ -26,6 +30,16 @@ urlpatterns = [
     path("auth/logout/", BlacklistView.as_view(), name="logout"),
     path("me/", UserProfileView, name="profile"),
     path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
+    path(
+        "apartments/<int:apt_id>/photos/",
+        ApartmentPhotoViewSet.as_view({"post": "create"}),
+        name="apartment_photos_create",
+    ),
+    path(
+        "apartments/<int:apt_id>/photos/<int:photo_id>",
+        ApartmentPhotoViewSet.as_view({"delete": "destroy"}),
+        name="apartment_photo_delete",
+    ),
     path(
         "listings/activate/<int:listing_id>/", activate_listing, name="activate_listing"
     ),

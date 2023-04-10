@@ -11,3 +11,13 @@ class ApartmentPermissions(BasePermission):
         if view.action in ("update", "partial_update", "destroy"):
             return request.user.id == obj.user.id or request.user.is_staff
         return True
+
+
+class ApartmentPhotoPermissions(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if view.action in ("create", "update", "partial_update", "destroy"):
+            return request.user.id == obj.user.id or request.user.is_staff
+        return True

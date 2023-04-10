@@ -1,12 +1,19 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework import status, viewsets, permissions
+from rest_framework import mixins, status, viewsets, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 
-from ..serializers.ApartmentSerializer import ApartmentSerializer
-from ..models import Apartment, LikedApartments
-from ..permissions.ApartmentPermissions import ApartmentPermissions
+from ..serializers.ApartmentSerializer import (
+    ApartmentPhotosSerializer,
+    ApartmentSerializer,
+)
+from ..models import Apartment, ApartmentPhoto, LikedApartments
+from ..permissions.ApartmentPermissions import (
+    ApartmentPermissions,
+    ApartmentPhotoPermissions,
+)
 
 
 # Apartment viewset: CRUD
@@ -26,13 +33,44 @@ class ApartmentViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.validated_data["user"] = request.user
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
         instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Apartment photo viewset: Create & Destroy
+class ApartmentPhotoViewSet(
+    viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin
+):
+    serializer_class = ApartmentPhotosSerializer
+    permission_classes = [ApartmentPhotoPermissions]
+    authentication_classes = [JWTAuthentication]
+    queryset = ApartmentPhoto.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.queryset
+        return ApartmentPhoto.objects.filter(apt__user__id=self.request.user.id)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        data["apt"] = kwargs.get("apt_id")
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        apt_id = kwargs.get("apt_id")
+        photo_id = kwargs.get("photo_id")
+        instance = get_object_or_404(ApartmentPhoto, apt__id=apt_id, id=photo_id)
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

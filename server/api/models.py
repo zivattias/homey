@@ -198,3 +198,20 @@ class LikedApartments(models.Model):
                 name="unique_user_liked_apartments",
             )
         ]
+
+
+class ApartmentPhoto(models.Model):
+    apt = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name="photos")
+    photo_url = models.URLField()
+
+    class Meta:
+        db_table = "apartment_photos"
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "apt",
+                    "photo_url",
+                ],
+                name="unique_apartment_id_photos",
+            )
+        ]

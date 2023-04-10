@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .ReviewSerializer import ReviewSerializer
 
-from ..models import LikedApartments, Apartment, Review
+from ..models import LikedApartments, Apartment, ApartmentPhoto
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
@@ -25,3 +25,12 @@ class LikedApartmentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = LikedApartments
         fields = ("apartment",)
+
+
+class ApartmentPhotosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApartmentPhoto
+        fields = "__all__"
+        extra_kwargs = {
+            "apt": {"required": False},
+        }
