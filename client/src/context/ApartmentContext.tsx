@@ -1,16 +1,18 @@
 import React from "react";
 
+type Nullable<T> = T | null;
+
 export interface Apartment {
-    street: string | null;
-    streetNum: string | null;
-    aptNum: number | null;
-    zipCode: string | null;
-    squareMeter: number | null;
-    petFriendly: boolean | null;
-    smokeFriendly: boolean | null;
-    isWifi: boolean | null;
-    isBalcony: boolean | null;
-    isParking: boolean | null;
+    street: string;
+    streetNum: Nullable<number>;
+    aptNum: Nullable<number>;
+    zipCode: string;
+    squareMeter: Nullable<number>;
+    petFriendly: boolean;
+    smokeFriendly: boolean;
+    isWifi: boolean;
+    isBalcony: boolean;
+    isParking: boolean;
 }
 
 export enum ADD_APARTMENT_ACTIONS {
@@ -23,16 +25,16 @@ interface AddApartmentAction {
 }
 
 export const INITIAL_APARTMENT_STATE: Apartment = {
-    street: null,
+    street: "",
     streetNum: null,
     aptNum: null,
-    zipCode: null,
+    zipCode: "",
     squareMeter: null,
-    petFriendly: null,
-    smokeFriendly: null,
-    isWifi: null,
-    isBalcony: null,
-    isParking: null,
+    petFriendly: false,
+    smokeFriendly: false,
+    isWifi: false,
+    isBalcony: false,
+    isParking: false,
 };
 
 function apartmentReducer(
