@@ -8,18 +8,23 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useTheme } from "@mui/material";
-import { ColorModeContext } from "../App";
-import { USER_ACTIONS, useUser, useUserDispatch } from "../context/UserContext";
-import AuthModal from "./AuthModal/AuthModal";
-import sendRequest from "../utils/funcs/sendRequest";
-import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
-import { Link } from "react-router-dom";
+import { ColorModeContext } from "../../App";
+import {
+    USER_ACTIONS,
+    useUser,
+    useUserDispatch,
+} from "../../context/UserContext";
+import AuthModal from "../AuthModal/AuthModal";
+import sendRequest from "../../utils/funcs/sendRequest";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
+import { Link, useNavigate } from "react-router-dom";
+import pagesEndpoints from "./funcs/pagesEndpoints";
 
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -34,6 +39,7 @@ function Navbar() {
 
     const user = useUser();
     const dispatch = useUserDispatch();
+    const navigate = useNavigate();
 
     React.useEffect(() => {}, [
         user.accessToken,
@@ -145,19 +151,25 @@ function Navbar() {
                                 display: { xs: "block", md: "flex" },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Typography
-                                        color="inherit"
-                                        textTransform="capitalize"
+                            {pages.map((page) =>
+                                user.accessToken == null &&
+                                page == "Upload" ? null : (
+                                    <MenuItem
+                                        key={page}
+                                        onClick={() => {
+                                            handleCloseNavMenu();
+                                            navigate(pagesEndpoints[page]);
+                                        }}
                                     >
-                                        {page}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
+                                        <Typography
+                                            color="inherit"
+                                            textTransform="capitalize"
+                                        >
+                                            {page}
+                                        </Typography>
+                                    </MenuItem>
+                                )
+                            )}
                             <Box
                                 sx={{
                                     display: "flex",
@@ -206,21 +218,25 @@ function Navbar() {
                             display: { xs: "none", md: "flex" },
                         }}
                     >
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{
-                                    textAlign: "center",
-                                    textTransform: "capitalize",
-                                    my: 2,
-                                    color: "inherit",
-                                    display: "block",
-                                }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
+                        {pages.map((page) =>
+                            user.accessToken == null &&
+                            page == "Upload" ? null : (
+                                <MenuItem
+                                    key={page}
+                                    onClick={() => {
+                                        handleCloseNavMenu();
+                                        navigate(pagesEndpoints[page]);
+                                    }}
+                                >
+                                    <Typography
+                                        color="inherit"
+                                        textTransform="capitalize"
+                                    >
+                                        {page}
+                                    </Typography>
+                                </MenuItem>
+                            )
+                        )}
                     </Box>
 
                     <Box
