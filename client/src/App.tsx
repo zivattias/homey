@@ -11,6 +11,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import sendRequest from "./utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
 import refreshAccessToken from "./utils/funcs/refreshAccessToken";
+import UploadPage from "./pages/UploadPage";
 
 export const ColorModeContext = React.createContext({
     toggleColorMode: () => {},
@@ -18,7 +19,7 @@ export const ColorModeContext = React.createContext({
 
 function App() {
     const dispatch = useUserDispatch();
-    const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
+    const [refreshToken, _] = useLocalStorage("refreshToken", "");
 
     React.useEffect(() => {
         const getAccessToken = async () => {
@@ -53,7 +54,9 @@ function App() {
                 }
             }
         };
-        getAccessToken();
+        if (refreshToken) {
+            getAccessToken();
+        }
     }, []);
 
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`);
@@ -91,6 +94,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Root />}>
                             <Route index element={<HomePage />} />
+                            <Route path="/upload" element={<UploadPage />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>
                     </Routes>
