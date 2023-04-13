@@ -4,13 +4,16 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { UserProvider } from "./context/UserContext";
 import "./index.css";
+import { ApartmentProvider } from "./context/ApartmentContext";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     // <React.StrictMode>
     <UserProvider>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <ApartmentProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </ApartmentProvider>
     </UserProvider>
     // </React.StrictMode>
 );
