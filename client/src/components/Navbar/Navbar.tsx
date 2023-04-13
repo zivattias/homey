@@ -8,7 +8,6 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -100,7 +99,10 @@ function Navbar() {
             sx={{ backgroundColor: "inherit", color: "inherit" }}
         >
             <Container maxWidth="xl">
-                <Toolbar disableGutters>
+                <Toolbar
+                    disableGutters
+                    sx={{ justifyContent: { xs: "space-between" } }}
+                >
                     <Link to="/">
                         <Typography
                             variant="h6"
@@ -119,7 +121,6 @@ function Navbar() {
                     </Link>
                     <Box
                         sx={{
-                            flexGrow: 1,
                             display: { xs: "flex", md: "none" },
                         }}
                     >
@@ -148,7 +149,7 @@ function Navbar() {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
-                                display: { xs: "block", md: "flex" },
+                                display: { xs: "flex", md: "none" },
                             }}
                         >
                             {pages.map((page) =>
@@ -196,22 +197,24 @@ function Navbar() {
                             </Box>
                         </Menu>
                     </Box>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: "flex", md: "none" },
-                            flexGrow: 1,
-                            fontWeight: 700,
-                            color: "inherit",
-                            textDecoration: "none",
-                        }}
+                    <Link
+                        to="/"
+                        style={{ marginLeft: "auto", marginRight: "auto" }}
                     >
-                        Homey
-                    </Typography>
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                px: 2,
+                                display: { xs: "flex", md: "none" },
+                                fontWeight: 700,
+                                color: "inherit",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Homey
+                        </Typography>
+                    </Link>
                     <Box
                         sx={{
                             flexGrow: 1,
@@ -248,7 +251,6 @@ function Navbar() {
                         <Box
                             sx={{
                                 display: "flex",
-                                width: "100%",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 bgcolor: "inherit",
@@ -268,11 +270,10 @@ function Navbar() {
                                     <LightModeIcon />
                                 )}
                             </IconButton>
-                            {/* {theme.palette.mode} mode */}
                         </Box>
                     </Box>
 
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box sx={{ px: 2 }}>
                         <Tooltip title="Open settings">
                             <IconButton
                                 onClick={handleOpenUserMenu}
