@@ -1,35 +1,21 @@
 import axios, { AxiosResponse } from "axios";
-import refreshAccessToken from "./refreshAccessToken";
 
 async function sendRequest(
-    method: string,
-    endpoint: string,
+    method: "post" | "get" | "patch" | "put" | "delete",
+    url: string,
     accessToken: string,
-    refreshToken: string,
-    body: object
+    data: { [key: string]: string }
 ): Promise<AxiosResponse> {
     const headers = accessToken
         ? { Authorization: `Bearer ${accessToken}` }
         : {};
-    const options = { headers, ...body };
-    const response = await (axios as any)[method](endpoint, options);
-
-    if (response.status === 401) {
-        console.log("Got unauthorized, getting new accessToken");
-        const newAccessToken = await refreshAccessToken(refreshToken);
-
-        if (newAccessToken && newAccessToken !== accessToken) {
-            return sendRequest(
-                method,
-                endpoint,
-                newAccessToken,
-                refreshToken,
-                body
-            );
-        }
-    }
-
-    return response as AxiosResponse;
+    const response = await axios({
+        method: method,
+        url: url,
+        data: data,
+        headers: headers,
+    });
+    return response;
 }
 
 export default sendRequest;

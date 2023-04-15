@@ -1,6 +1,6 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -78,8 +78,7 @@ function Navbar() {
                 API_ENDPOINTS.AUTH.BASE +
                 API_ENDPOINTS.AUTH.LOGOUT,
             user.accessToken!,
-            user.refreshToken!,
-            { refresh: user.refreshToken }
+            { refresh: user.refreshToken! }
         );
         dispatch({
             type: USER_ACTIONS.BLACKLIST,
@@ -103,7 +102,13 @@ function Navbar() {
                     disableGutters
                     sx={{ justifyContent: { xs: "space-between" } }}
                 >
-                    <Link to="/">
+                    <Link
+                        to="/"
+                        style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                        }}
+                    >
                         <Typography
                             variant="h6"
                             noWrap
@@ -199,7 +204,12 @@ function Navbar() {
                     </Box>
                     <Link
                         to="/"
-                        style={{ marginLeft: "auto", marginRight: "auto" }}
+                        style={{
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            color: "inherit",
+                            textDecoration: "none",
+                        }}
                     >
                         <Typography
                             variant="h5"

@@ -5,7 +5,6 @@ import Root from "./pages/Root";
 import NotFound from "./pages/NotFound";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
-import { ChakraProvider } from "@chakra-ui/react";
 import { USER_ACTIONS, useUserDispatch } from "./context/UserContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 import sendRequest from "./utils/funcs/sendRequest";
@@ -38,7 +37,6 @@ function App() {
                     "get",
                     FULL_API_ENDPOINT + API_ENDPOINTS.ME,
                     accessToken,
-                    refreshToken as string,
                     {}
                 );
                 if (response) {
@@ -87,20 +85,18 @@ function App() {
     );
 
     return (
-        <ChakraProvider>
-            <ColorModeContext.Provider value={colorMode}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Routes>
-                        <Route path="/" element={<Root />}>
-                            <Route index element={<HomePage />} />
-                            <Route path="/upload" element={<UploadPage />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Route>
-                    </Routes>
-                </ThemeProvider>
-            </ColorModeContext.Provider>
-        </ChakraProvider>
+        <ColorModeContext.Provider value={colorMode}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Routes>
+                    <Route path="/" element={<Root />}>
+                        <Route index element={<HomePage />} />
+                        <Route path="/upload" element={<UploadPage />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Route>
+                </Routes>
+            </ThemeProvider>
+        </ColorModeContext.Provider>
     );
 }
 

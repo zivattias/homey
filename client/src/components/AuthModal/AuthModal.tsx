@@ -9,7 +9,6 @@ import {
     ModalProps,
     Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
 import { AxiosError } from "axios";
 import React from "react";
 import {
@@ -33,7 +32,7 @@ const style = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: { xs: "90%", sm: "50%" },
+    width: { xs: "80%", sm: "70%", md: "50%", lg: "35%" },
     bgcolor: "background.paper",
     boxShadow: 24,
 };
@@ -61,14 +60,12 @@ export default function AuthModal({
     const user = useUser();
     const dispatch = useUserDispatch();
     const [loading, setLoading] = React.useState<boolean>(false);
-    console.log(user);
 
     const getUserData = async () => {
         const userData = await sendRequest(
             "get",
             FULL_API_ENDPOINT + API_ENDPOINTS.ME,
             user.accessToken as string,
-            user.refreshToken as string,
             {}
         );
         setLoading(false);
@@ -123,7 +120,6 @@ export default function AuthModal({
                         API_ENDPOINTS.AUTH.BASE +
                         API_ENDPOINTS.AUTH.LOGIN,
                     "",
-                    "",
                     { ...submissionFormValues }
                 );
                 dispatch({
@@ -140,7 +136,6 @@ export default function AuthModal({
                     FULL_API_ENDPOINT +
                         API_ENDPOINTS.AUTH.BASE +
                         API_ENDPOINTS.AUTH.REGISTER,
-                    "",
                     "",
                     { ...submissionFormValues }
                 );

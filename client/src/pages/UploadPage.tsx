@@ -14,14 +14,11 @@ import SecondStage from "../components/UploadPage/SecondStage";
 function UploadPage() {
     const theme = useTheme();
     const user = useUser();
-    const apartment = useApartment();
-    console.log(apartment);
     const dispatch = useApartmentDispatch();
     const [isSecondStage, setIsSecondStage] = React.useState<boolean>(false);
 
     const handleStages = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log(apartment);
         isSecondStage ? setIsSecondStage(false) : setIsSecondStage(true);
     };
 
@@ -43,7 +40,6 @@ function UploadPage() {
     ) : isSecondStage ? (
         <SecondStage
             theme={theme}
-            handleChange={handleChange}
             handleStages={handleStages}
         />
     ) : (

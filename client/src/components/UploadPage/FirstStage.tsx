@@ -31,9 +31,10 @@ function FirstStage({
                 height: {
                     xs: "calc(100vh - 56px)",
                     sm: "calc(100vh - 64px)",
-                    m: "calc(100vh - 88px)",
+                    md: "calc(100vh - 88px)",
+                    lg: "calc(100vh - 88px)",
                 },
-                p: 5,
+                px: 6,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

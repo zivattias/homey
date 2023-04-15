@@ -2,12 +2,15 @@ import React from "react";
 import { LoadingButton } from "@mui/lab";
 import {
     Divider,
-    FormControl,
-    Input,
-    InputLabel,
     Modal,
     Box,
     Typography,
+    TextField,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
 } from "@mui/material";
 import { FormValues } from "./AuthModal";
 
@@ -70,34 +73,30 @@ function LoginModal({
                         >
                             Welcome to Homey!
                         </Typography>
-                        <FormControl sx={{ marginBottom: "1em" }}>
-                            <InputLabel htmlFor="username">Username</InputLabel>
-                            <Input
-                                type="text"
-                                value={loginFormValues.username}
-                                onChange={(event) =>
-                                    setLoginFormValues({
-                                        ...loginFormValues,
-                                        username: event.target.value,
-                                    })
-                                }
-                                id="username"
-                            />
-                        </FormControl>
-                        <FormControl sx={{ marginBottom: "1em" }}>
-                            <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input
-                                type="password"
-                                value={loginFormValues.password}
-                                onChange={(event) =>
-                                    setLoginFormValues({
-                                        ...loginFormValues,
-                                        password: event.target.value,
-                                    })
-                                }
-                                id="password"
-                            />
-                        </FormControl>
+                        <TextField
+                            id="username"
+                            sx={{ marginBottom: "1em" }}
+                            type="text"
+                            value={loginFormValues.username}
+                            onChange={(event) =>
+                                setLoginFormValues({
+                                    ...loginFormValues,
+                                    username: event.target.value,
+                                })
+                            }
+                        />
+                        <TextField
+                            sx={{ marginBottom: "1em" }}
+                            id="password"
+                            type="password"
+                            value={loginFormValues.password}
+                            onChange={(event) =>
+                                setLoginFormValues({
+                                    ...loginFormValues,
+                                    password: event.target.value,
+                                })
+                            }
+                        />
                         <LoadingButton loading={loading} type="submit">
                             Login
                         </LoadingButton>

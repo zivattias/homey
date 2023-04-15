@@ -17,6 +17,7 @@ export interface Apartment {
 
 export enum ADD_APARTMENT_ACTIONS {
     CHANGE_ATTR = "changeAttribute",
+    RESET_FORM = "resetForm",
 }
 
 interface AddApartmentAction {
@@ -47,6 +48,9 @@ function apartmentReducer(
                 ...apartmentState,
                 ...action.payload,
             };
+        }
+        case ADD_APARTMENT_ACTIONS.RESET_FORM: {
+            return INITIAL_APARTMENT_STATE;
         }
         default: {
             throw new Error("Unknown action: " + action.type);
