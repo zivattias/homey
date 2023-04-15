@@ -1,0 +1,1 @@
+A versatile web application aimed at addressing the housing crisis in Tel-Aviv. The platform allows users to both view and post property listings, and facilitates communication between listing-owners and tenants to explore potential housing options.
