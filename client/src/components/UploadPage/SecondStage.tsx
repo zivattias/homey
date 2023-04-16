@@ -32,7 +32,7 @@ function SecondStage({
     theme: Theme;
     handleStages: (event: React.FormEvent) => void;
 }) {
-    const [checkboxes, setCheckboxes] = React.useState(checkboxesData);
+    const [checkboxes, setCheckboxes] = React.useState([...checkboxesData]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const handleCheckboxChange = (index: number) => {
@@ -54,13 +54,11 @@ function SecondStage({
     const user = useUser();
     const apartment = useApartment();
     const dispatch = useApartmentDispatch();
-
     const [created, setCreated] = React.useState<boolean>(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const snakeCaseApartmentAttributes = convertCamelToSnake(apartment);
-
         const response = await sendRequest(
             "post",
             FULL_API_ENDPOINT + API_ENDPOINTS.APARTMENTS.BASE,
@@ -74,8 +72,11 @@ function SecondStage({
             });
             setCreated(true);
         }
-        console.log(response);
         setLoading(false);
+
+        const updatedCheckboxes = [...checkboxes];
+        updatedCheckboxes.forEach((checkbox) => (checkbox.value = false));
+        setCheckboxes(updatedCheckboxes);
     };
 
     return (
