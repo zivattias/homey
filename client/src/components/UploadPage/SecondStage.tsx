@@ -24,6 +24,7 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { useUser } from "../../context/UserContext";
 import convertCamelToSnake from "../../utils/funcs/convertCamelToSnake";
 import { LoadingButton } from "@mui/lab";
+import ProgressBar from "./ProgressBar";
 
 function SecondStage({
     theme,
@@ -82,17 +83,12 @@ function SecondStage({
     return (
         <Container
             sx={{
-                height: {
-                    xs: "calc(100vh - 56px)",
-                    sm: "calc(100vh - 64px)",
-                    md: "calc(100vh - 88px)",
-                    lg: "calc(100vh - 88px)",
-                },
                 px: 6,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                marginBottom: "3em",
             }}
         >
             <Box
@@ -158,7 +154,7 @@ function SecondStage({
                                 );
                             })}
                         </FormGroup>
-                        <Divider></Divider>
+                        <Divider sx={{ marginY: "0.5em" }}></Divider>
                         <LoadingButton
                             loading={loading}
                             sx={{ my: "1em" }}

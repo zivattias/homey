@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Apartment, useApartment } from "../../context/ApartmentContext";
 import { Theme } from "@mui/material/styles/createTheme";
+import ProgressBar from "./ProgressBar";
 
 function FirstStage({
     theme,
@@ -28,17 +29,12 @@ function FirstStage({
     return (
         <Container
             sx={{
-                height: {
-                    xs: "calc(100vh - 56px)",
-                    sm: "calc(100vh - 64px)",
-                    md: "calc(100vh - 88px)",
-                    lg: "calc(100vh - 88px)",
-                },
-                px: 6,
+                px: 4,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                marginBottom: "3em",
             }}
         >
             <Box
