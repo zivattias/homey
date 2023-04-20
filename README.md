@@ -1,5 +1,5 @@
 <div style="display: flex; justify-content: center; align-items: center;">
-<img src="" width="200px" />
+<img src="https://raw.githubusercontent.com/zivattias/Homey/main/client/src/assets/logo.png" width="200px" />
 </div>
 
 Homey is a versatile end-to-end web application aimed at addressing the housing crisis in Tel-Aviv. The application allows users to both view and post property listings, and facilitates communication between listing-owners and tenants to explore potential housing options.
@@ -37,4 +37,4 @@ Homey is written in **Python** and **React** (TypeScript), and hosted on AWS.
 
 ## ⚖️ License
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+MIT License - see the `LICENSE` file for details.
