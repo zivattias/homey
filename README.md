@@ -1,4 +1,4 @@
-<div style="display: flex; justify-content: center; align-items: center;">
+<div style="width: 100vw; display: flex; justify-content: center; align-items: center;">
 <img src="https://raw.githubusercontent.com/zivattias/Homey/main/client/src/assets/logo.png" width="200px" />
 </div>
 
