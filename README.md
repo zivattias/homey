@@ -1,5 +1,5 @@
-<div style="width: 100vw; display: flex; justify-content: center; align-items: center;">
-<img src="https://raw.githubusercontent.com/zivattias/Homey/main/client/src/assets/logo.png" width="200px" />
+<div style="display: flex; justify-content: center; align-items: center; width: 100vw;">
+  <img src="https://raw.githubusercontent.com/zivattias/Homey/main/client/src/assets/logo.png" style="max-width: 200px;" />
 </div>
 
 Homey is a versatile end-to-end web application aimed at addressing the housing crisis in Tel-Aviv. The application allows users to both view and post property listings, and facilitates communication between listing-owners and tenants to explore potential housing options.
