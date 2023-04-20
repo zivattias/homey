@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-x*49*4c5r@%mq3y@5k%a@rco)914lwbr+-5ph(wfgm!=a5(5rp"
+SECRET_KEY = os.getenv("PROD_DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["54.234.238.178", "ec2-54-234-238-178.compute-1.amazonaws.com"]
+ALLOWED_HOSTS = list(os.getenv("PROD_DJANGO_ALLOWED_HOSTS"))
 
 # Application definition
 
@@ -95,10 +99,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "homey",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "homey-db.cajylcyztxty.us-east-1.rds.amazonaws.com",
-        "PORT": "5432",
+        "USER": os.getenv("PROD_DATABASE_USER"),
+        "PASSWORD": os.getenv("PROD_DATABASE_PASSWORD"),
+        "HOST": os.getenv("PROD_DATABASE_HOST"),
+        "PORT": os.getenv("PROD_DATABASE_PORT"),
     }
 }
 
