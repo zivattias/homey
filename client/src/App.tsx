@@ -17,6 +17,7 @@ export const ColorModeContext = React.createContext({
 });
 
 function App() {
+    console.log("Environment: " + process.env.NODE_ENV);
     const dispatch = useUserDispatch();
     const [refreshToken, _] = useLocalStorage("refreshToken", "");
 

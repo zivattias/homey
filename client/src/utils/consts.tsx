@@ -6,7 +6,7 @@ export const BASE_API_URL =
         ? "http://127.0.0.1:"
         : "http://ec2-3-82-146-235.compute-1.amazonaws.com/";
 export const BASE_API_PORT =
-    process.env.NODE_ENV === "development" ? "8000" : "";
+    process.env.NODE_ENV === "development" ? "8000/" : "";
 export const BASE_API_ENDPOINT = "api/";
 export const FULL_API_ENDPOINT =
     BASE_API_URL + BASE_API_PORT + BASE_API_ENDPOINT;
