@@ -30,9 +30,7 @@ SECRET_KEY = os.getenv("PROD_DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = list(os.getenv("PROD_DJANGO_ALLOWED_HOSTS"))
-print(list(os.getenv("PROD_DJANGO_ALLOWED_HOSTS")))
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = os.getenv("PROD_DJANGO_ALLOWED_HOSTS").split(",")
 
 # Application definition
 
