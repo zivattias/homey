@@ -19,3 +19,30 @@ def UserProfileView(request):
                 {"message": "You must be logged in to view this page."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+
+# Returns True if username exists, else False
+@api_view(["GET"])
+def user_exists(request):
+    username = request.query_params.get("username")
+    if username:
+        user = User.objects.filter(username=username)
+        if user:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# Returns True if email exists, else False
+@api_view(["GET"])
+def email_exists(request):
+    email = request.query_params.get("email")
+    if email:
+        user = User.objects.filter(email=email)
+        if user:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
