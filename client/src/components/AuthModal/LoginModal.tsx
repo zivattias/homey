@@ -1,9 +1,17 @@
 import React from "react";
 import { LoadingButton } from "@mui/lab";
-import { Divider, Modal, Box, Typography, TextField } from "@mui/material";
+import {
+    Divider,
+    Modal,
+    Box,
+    Typography,
+    TextField,
+    InputAdornment,
+} from "@mui/material";
 import { FormValues } from "./AuthModal";
-import { Suite, SuiteRunResult } from "vest";
 import { loginSuite } from "../../utils/suites/loginSuite";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface LoginModalProps {
     open: boolean;
@@ -31,6 +39,7 @@ function LoginModal({
     loading,
 }: LoginModalProps) {
     const [formState, setFormState] = React.useState({});
+    const [visibility, setVisibility] = React.useState<boolean>(false);
 
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -50,7 +59,13 @@ function LoginModal({
 
     return (
         <React.Fragment>
-            <Modal open={open} onClose={onClose}>
+            <Modal
+                open={open}
+                onClose={() => {
+                    onClose();
+                    loginSuite.reset();
+                }}
+            >
                 <Box sx={style}>
                     <Box>
                         <Typography
@@ -83,6 +98,7 @@ function LoginModal({
                             Welcome to Homey!
                         </Typography>
                         <TextField
+                            placeholder="Username"
                             error={
                                 suiteResult.hasErrors("username") ? true : false
                             }
@@ -100,13 +116,37 @@ function LoginModal({
                             }
                         />
                         <TextField
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <Box
+                                            component="button"
+                                            type="button"
+                                            sx={{
+                                                backgroundColor: "transparent",
+                                                border: "none",
+                                            }}
+                                            onClick={() =>
+                                                setVisibility(!visibility)
+                                            }
+                                        >
+                                            {visibility ? (
+                                                <VisibilityOffIcon />
+                                            ) : (
+                                                <VisibilityIcon />
+                                            )}
+                                        </Box>
+                                    </InputAdornment>
+                                ),
+                            }}
+                            placeholder="Password"
                             error={
                                 suiteResult.hasErrors("password") ? true : false
                             }
                             helperText={suiteResult.getErrors("password")}
                             sx={{ marginBottom: "1em" }}
                             id="password"
-                            type="password"
+                            type={visibility ? "text" : "password"}
                             value={loginFormValues.password}
                             onChange={(event) =>
                                 handleChange(
@@ -120,7 +160,7 @@ function LoginModal({
                             disabled={
                                 loginFormValues.username == "" ||
                                 loginFormValues.password == "" ||
-                                suiteResult.hasErrors()
+                                !suiteResult.isValid()
                             }
                             loading={loading}
                             type="submit"
