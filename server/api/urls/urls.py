@@ -10,7 +10,7 @@ from ..viewsets.ReviewViewSet import ReviewViewSet
 from ..viewsets.ProposalViewSet import ProposalViewSet
 from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
 from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
-from ..viewsets.UserViewSets import UserProfileView
+from ..viewsets.UserViewSets import UserProfileView, user_exists, email_exists
 from ..viewsets.ApartmentViewSets import (
     ApartmentViewSet,
     like_apartment,
@@ -29,6 +29,8 @@ urlpatterns = [
     path("auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/logout/", BlacklistView.as_view(), name="logout"),
     path("me/", UserProfileView, name="profile"),
+    path("user_exists/", user_exists, name="user_exists"),
+    path("email_exists/", email_exists, name="email_exists"),
     path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
     path(
         "apartments/<int:apt_id>/photos/",
