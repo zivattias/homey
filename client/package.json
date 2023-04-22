@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-router-dom": "^6.10.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "vest": "^4.6.9"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

@@ -1,14 +1,4 @@
-import { LoadingButton } from "@mui/lab";
-import {
-    Button,
-    Divider,
-    FormControl,
-    Input,
-    InputLabel,
-    Modal,
-    ModalProps,
-    Typography,
-} from "@mui/material";
+import { ModalProps } from "@mui/material";
 import { AxiosError } from "axios";
 import React from "react";
 import {
@@ -130,7 +120,6 @@ export default function AuthModal({
                     },
                 });
             } else {
-                console.log(submissionFormValues);
                 const response = await sendRequest(
                     "post",
                     FULL_API_ENDPOINT +

@@ -1,23 +1,14 @@
 import React from "react";
 import { LoadingButton } from "@mui/lab";
-import {
-    Divider,
-    Modal,
-    Box,
-    Typography,
-    TextField,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-} from "@mui/material";
+import { Divider, Modal, Box, Typography, TextField } from "@mui/material";
 import { FormValues } from "./AuthModal";
+import { Suite, SuiteRunResult } from "vest";
+import { loginSuite } from "../../utils/suites/loginSuite";
 
 interface LoginModalProps {
     open: boolean;
     onClose: () => void;
-    style: object;
+    style: {};
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     handleSubmission: (
         event: React.FormEvent,
@@ -39,6 +30,24 @@ function LoginModal({
     setLoginFormValues,
     loading,
 }: LoginModalProps) {
+    const [formState, setFormState] = React.useState({});
+
+    const handleChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        currentField: "username" | "password",
+        value: string
+    ) => {
+        setLoginFormValues({
+            ...loginFormValues,
+            [currentField]: event.target.value,
+        });
+        const nextState = { ...formState, [currentField]: value };
+        loginSuite(nextState, currentField);
+        setFormState(nextState);
+    };
+
+    const suiteResult = loginSuite.get();
+
     return (
         <React.Fragment>
             <Modal open={open} onClose={onClose}>
@@ -74,30 +83,48 @@ function LoginModal({
                             Welcome to Homey!
                         </Typography>
                         <TextField
+                            error={
+                                suiteResult.hasErrors("username") ? true : false
+                            }
+                            helperText={suiteResult.getErrors("username")}
                             id="username"
                             sx={{ marginBottom: "1em" }}
                             type="text"
                             value={loginFormValues.username}
                             onChange={(event) =>
-                                setLoginFormValues({
-                                    ...loginFormValues,
-                                    username: event.target.value,
-                                })
+                                handleChange(
+                                    event,
+                                    "username",
+                                    event.target.value
+                                )
                             }
                         />
                         <TextField
+                            error={
+                                suiteResult.hasErrors("password") ? true : false
+                            }
+                            helperText={suiteResult.getErrors("password")}
                             sx={{ marginBottom: "1em" }}
                             id="password"
                             type="password"
                             value={loginFormValues.password}
                             onChange={(event) =>
-                                setLoginFormValues({
-                                    ...loginFormValues,
-                                    password: event.target.value,
-                                })
+                                handleChange(
+                                    event,
+                                    "password",
+                                    event.target.value
+                                )
                             }
                         />
-                        <LoadingButton loading={loading} type="submit">
+                        <LoadingButton
+                            disabled={
+                                loginFormValues.username == "" ||
+                                loginFormValues.password == "" ||
+                                suiteResult.hasErrors()
+                            }
+                            loading={loading}
+                            type="submit"
+                        >
                             Login
                         </LoadingButton>
                     </Box>
