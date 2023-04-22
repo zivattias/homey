@@ -18,6 +18,8 @@ export const API_ENDPOINTS = {
         REGISTER: "register/",
         REFRESH: "refresh/",
         LOGOUT: "logout/",
+        USER_EXISTS: "user_exists/",
+        EMAIL_EXISTS: "email_exists/",
     },
     ME: "me/",
     APARTMENTS: {
