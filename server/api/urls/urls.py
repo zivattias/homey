@@ -10,7 +10,12 @@ from ..viewsets.ReviewViewSet import ReviewViewSet
 from ..viewsets.ProposalViewSet import ProposalViewSet
 from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
 from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
-from ..viewsets.UserViewSets import UserProfileView, user_exists, email_exists
+from ..viewsets.UserViewSets import (
+    UpdateUserViewSet,
+    UserProfileView,
+    user_exists,
+    email_exists,
+)
 from ..viewsets.ApartmentViewSets import (
     ApartmentViewSet,
     like_apartment,
@@ -44,5 +49,10 @@ urlpatterns = [
     ),
     path(
         "listings/activate/<int:listing_id>/", activate_listing, name="activate_listing"
+    ),
+    path(
+        "users/<int:user_id>/",
+        UpdateUserViewSet.as_view({"patch": "partial_update", "put": "update"}),
+        name="update_user",
     ),
 ] + router.urls

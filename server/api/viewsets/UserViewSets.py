@@ -1,7 +1,10 @@
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import api_view
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
+
+from ..permissions.UserUpdatePermissions import UserUpdatePermissions
 
 from ..serializers.UserSerializer import UserSerializer
 
@@ -34,6 +37,7 @@ def user_exists(request):
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
 # Returns True if email exists, else False
 @api_view(["GET"])
 def email_exists(request):
@@ -46,3 +50,30 @@ def email_exists(request):
             return Response(False, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Update user details, e.g. first_name (partial)
+class UpdateUserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    serializer_class = UserSerializer
+    permission_classes = [UserUpdatePermissions]
+    authentication_classes = [JWTAuthentication]
+    queryset = User.objects.filter(is_active=True)
+
+    def get_queryset(self, user_id):
+        if self.request.user.is_staff:
+            return User.objects.get(id=user_id)
+        return self.queryset.get(id=user_id)
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_queryset(kwargs['user_id'])
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        return Response(serializer.data)
+    
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    

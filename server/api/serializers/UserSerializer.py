@@ -7,6 +7,11 @@ from .ApartmentSerializer import LikedApartmentsSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     liked_apartments = LikedApartmentsSerializer
+    profile_pic = serializers.SerializerMethodField()
+
+    def get_profile_pic(self, obj):
+        user_profile = UserProfile.objects.get(user__id=obj.id)
+        return user_profile.profile_pic
 
     def get_liked_apartments(self, obj):
         user_profile = UserProfile.objects.get(user__id=obj.id)
@@ -21,5 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "username",
             "is_staff",
+            "profile_pic",
             "liked_apartments",
         )
