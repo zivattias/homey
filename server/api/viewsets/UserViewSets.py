@@ -71,7 +71,7 @@ class UpdateUserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)

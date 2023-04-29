@@ -31,7 +31,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="user_profile"
     )
-    profile_pic = models.URLField(max_length=512)
+    profile_pic = models.URLField(max_length=512, null=True)
 
     class Meta:
         db_table = "user_profiles"
