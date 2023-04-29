@@ -45,6 +45,7 @@ function App() {
               firstName: response.data.first_name,
               lastName: response.data.last_name,
               isStaff: response.data.is_staff,
+              profilePic: response.data.profile_pic,
               ...response.data,
             },
           });
