@@ -8,7 +8,6 @@ import {
   TextField,
   InputAdornment,
   CircularProgress,
-  Button,
 } from "@mui/material";
 import { FormValues } from "./AuthModal";
 import { registerSuite } from "../../utils/suites/registerSuite";
@@ -73,8 +72,6 @@ function RegisterModal({
   };
 
   const suiteResult = registerSuite.get();
-
-  console.log(suiteResult.getErrors());
 
   return (
     <React.Fragment>
@@ -255,7 +252,11 @@ function RegisterModal({
               sx={{ marginBottom: "1em" }}
             />
             <LoadingButton
-              disabled={!suiteResult.isValid()}
+              disabled={
+                Object.values(registerFormValues).some(
+                  (value) => value === ""
+                ) || !suiteResult.isValid()
+              }
               loading={loading}
               type="submit"
             >
