@@ -22,6 +22,7 @@ export const API_ENDPOINTS = {
         EMAIL_EXISTS: "email_exists/",
     },
     ME: "me/",
+    USERS: "users/",
     APARTMENTS: {
         BASE: "apartments/",
         LIKE: "like/",
