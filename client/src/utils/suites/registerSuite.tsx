@@ -2,7 +2,7 @@ import { create, test, enforce, only, skipWhen, omitWhen } from "vest";
 import sendRequest from "../funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../consts";
 
-const doesUserExist = async (username: string) => {
+export const doesUserExist = async (username: string) => {
     const response = await sendRequest(
         "get",
         FULL_API_ENDPOINT +
@@ -15,7 +15,7 @@ const doesUserExist = async (username: string) => {
     enforce(response.data).isFalsy();
 };
 
-const doesEmailExist = async (email: string) => {
+export const doesEmailExist = async (email: string) => {
     const response = await sendRequest(
         "get",
         FULL_API_ENDPOINT + API_ENDPOINTS.AUTH.EMAIL_EXISTS + `?email=${email}`,
