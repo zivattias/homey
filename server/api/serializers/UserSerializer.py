@@ -10,12 +10,10 @@ class UserSerializer(serializers.ModelSerializer):
     profile_pic = serializers.SerializerMethodField()
 
     def get_profile_pic(self, obj):
-        user_profile = UserProfile.objects.get(user__id=obj.id)
-        return user_profile.profile_pic
+        return obj.user_profile.profile_pic
 
     def get_liked_apartments(self, obj):
-        user_profile = UserProfile.objects.get(user__id=obj.id)
-        return user_profile.liked_apartments
+        return obj.liked_apartments
 
     class Meta:
         model = User
