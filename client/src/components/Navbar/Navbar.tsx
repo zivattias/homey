@@ -24,6 +24,7 @@ import sendRequest from "../../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { Link, useNavigate } from "react-router-dom";
 import pagesEndpoints from "./funcs/pagesEndpoints";
+import { useAlert } from "react-alert";
 
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -31,6 +32,7 @@ const loggedOutSettings = ["Login", "Register"];
 // TODO: add page/setting-to-function mapped object for better .map() below (hint: search for 'settings')
 
 function Navbar() {
+  const alert = useAlert();
   const [modalType, setModalType] = React.useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -90,7 +92,9 @@ function Navbar() {
         refreshToken: user.refreshToken,
       },
     });
+    alert.show("Logged out!", { type: "success" });
     if (response.status !== 200) {
+      alert.show("Error logging out!", { type: "error" });
       throw new Error("Server-side error occurred");
     }
   };
