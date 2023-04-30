@@ -14,10 +14,10 @@ function PictureField() {
 
     // AWS.config.update({
     //   credentials: {
-    //     accessKeyId: "AKIATQKOEHH75MS75QZU",
-    //     secretAccessKey: "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",
+    //     accessKeyId: 
+    //     secretAccessKey: 
     //   },
-    //   region: "us-east-1",
+    //   region: ,
     // });
     // const s3 = new AWS.S3();
 
