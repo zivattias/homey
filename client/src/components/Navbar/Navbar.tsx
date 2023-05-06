@@ -1,6 +1,6 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -41,7 +41,8 @@ function Navbar() {
   const dispatch = useUserDispatch();
   const navigate = useNavigate();
 
-  React.useEffect(() => {}, [user.accessToken, user.firstName, user.lastName]);
+  const [isAvatarLoading, setIsAvatarLoading] = React.useState<boolean>(true);
+  console.log(user);
 
   // Settings-Functions map object:
   const settingsFuncsObj: { [key: string]: () => void } = {
@@ -284,9 +285,21 @@ function Navbar() {
 
           <Box sx={{ px: 2 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0, position: "relative" }}
+              >
+                {isAvatarLoading && (
+                  <CircularProgress size="1em" sx={{ position: "absolute" }} />
+                )}
                 <Avatar
-                  alt="User profile picture" // TODO add src attr to Avatar component
+                  alt="User profile picture"
+                  src={user.profilePic ?? ""}
+                  sx={{ position: "absolute" }}
+                  imgProps={{
+                    onLoad: () => setIsAvatarLoading(false),
+                    hidden: isAvatarLoading,
+                  }}
                 >
                   {user.accessToken && user.firstName && user.lastName
                     ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`

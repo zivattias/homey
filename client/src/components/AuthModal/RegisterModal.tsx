@@ -82,19 +82,18 @@ function RegisterModal({
           registerSuite.reset();
         }}
       >
-        <Box sx={style}>
+        <Box sx={{ ...style }}>
           <Box>
             <Typography
               sx={{
-                pt: 4,
-                my: "0em",
+                pt: 2,
                 fontWeight: "500",
               }}
             >
               Register an account
             </Typography>
           </Box>
-          <Divider sx={{ width: "100%", m: 0 }} />
+          <Divider sx={{ width: "100%" }} />
           <Box
             component="form"
             onSubmit={(event) => {
@@ -102,7 +101,7 @@ function RegisterModal({
               handleSubmission(event, registerFormValues, "register");
             }}
             sx={{
-              width: { xs: "90%", sm: "90%" },
+              width: { xs: "90%", sm: "95%" },
               display: "flex",
               flexDirection: "column",
               py: 2,

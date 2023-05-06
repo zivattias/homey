@@ -18,12 +18,12 @@ const style = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: 4,
+  gap: 2,
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: { xs: "80%", sm: "70%", md: "50%", lg: "35%" },
+  width: { xs: "85%", sm: "70%", md: "50%", lg: "35%" },
   bgcolor: "background.paper",
   boxShadow: 24,
 };
@@ -165,7 +165,7 @@ export default function AuthModal({
       if (e instanceof AxiosError) {
         alert.show(`${e.message}`, { type: "error" });
       } else {
-        alert.show("We're sorry, we couldn't process your request.", {
+        alert.show("Oops, an error occurred.", {
           type: "error",
         });
       }
