@@ -11,7 +11,11 @@ import {
 } from "../../context/UserContext";
 import axios from "axios";
 
-function PictureField() {
+function PictureField({
+  setPicLoading,
+}: {
+  setPicLoading: (value: boolean) => void;
+}) {
   const [imageFile, setImageFile] = React.useState<Blob | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
   const alert = useAlert();
@@ -20,6 +24,7 @@ function PictureField() {
   const theme = useTheme();
 
   const handlePhotoUpload = async (event: React.FormEvent) => {
+    setPicLoading(true);
     setLoading(true);
     event.preventDefault();
     const response = await sendRequest(

@@ -101,60 +101,63 @@ export default function ProfileField({
           updateField();
         }}
       >
-        <div className="input-group mb-0 w-50">
-          <div className="input-group-prepend">
-            <span
+        <Box width={{ xs: "100%", sm: "80%", md: "50%" }}>
+          <div className="input-group mb-0">
+            <div className="input-group-prepend">
+              <span
+                style={{
+                  backgroundColor:
+                    theme.palette.mode == "dark" ? "#141414" : "",
+                  color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+                }}
+                className="input-group-text"
+                id={`${label.replaceAll(" ", "-")}`}
+              >
+                {label}
+              </span>
+            </div>
+            <input
+              onBlur={() => validateEmail()}
               style={{
-                backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
-                color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+                backgroundColor: theme.palette.mode == "dark" ? "black" : "",
+                color: theme.palette.mode == "dark" ? "#fafafa" : "black",
               }}
-              className="input-group-text"
-              id={`${label.replaceAll(" ", "-")}`}
-            >
-              {label}
-            </span>
-          </div>
-          <input
-            onBlur={() => validateEmail()}
-            style={{
-              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
-            }}
-            type="text"
-            className="form-control"
-            value={fieldValue}
-            onChange={(event) => {
-              if (target == "email") {
-                setIsChanged(true);
-              }
-              setFieldValue(event.target.value);
-            }}
-          />
-          <div className="input-group-append">
-            <LoadingButton
-              type="submit"
-              loading={loading}
-              disabled={
-                fieldValue == user[target] ||
-                fieldValue == "" ||
-                !isEmailValid ||
-                (target != "email" && fieldValue.length < 2) ||
-                (target == "email" && isEmailExists) ||
-                (target == "email" && Boolean(emailExistsTest)) ||
-                (target == "email" && isChanged)
-              }
-              sx={{
-                borderTopLeftRadius: "0",
-                borderBottomLeftRadius: "0",
-                boxShadow: "none",
-                textTransform: "none",
+              type="text"
+              className="form-control"
+              value={fieldValue}
+              onChange={(event) => {
+                if (target == "email") {
+                  setIsChanged(true);
+                }
+                setFieldValue(event.target.value);
               }}
-              variant="outlined"
-            >
-              Save
-            </LoadingButton>
+            />
+            <div className="input-group-append">
+              <LoadingButton
+                type="submit"
+                loading={loading}
+                disabled={
+                  fieldValue == user[target] ||
+                  fieldValue == "" ||
+                  !isEmailValid ||
+                  (target != "email" && fieldValue.length < 2) ||
+                  (target == "email" && isEmailExists) ||
+                  (target == "email" && Boolean(emailExistsTest)) ||
+                  (target == "email" && isChanged)
+                }
+                sx={{
+                  borderTopLeftRadius: "0",
+                  borderBottomLeftRadius: "0",
+                  boxShadow: "none",
+                  textTransform: "none",
+                }}
+                variant="outlined"
+              >
+                Save
+              </LoadingButton>
+            </div>
           </div>
-        </div>
+        </Box>
       </Box>
       {target === "email" ? (
         <>

@@ -41,23 +41,25 @@ function ProfilePage() {
             marginBottom: 4,
           }}
         >
-          <Grid container>
-            <Grid item xs={6} md={6}>
-              <Stack gap={2}>
+          <Grid container direction={{ xs: "column", md: "row" }}>
+            <Grid item xs={12} md={6}>
+              <Stack gap={2} sx={{ marginBottom: { xs: "2em", md: "0" } }}>
                 <Typography variant="h6" fontWeight={600}>
                   Profile Picture
                 </Typography>
                 <Typography variant="subtitle1">
                   This is your public profile picture.
                 </Typography>
-                <PictureField />
+                <PictureField
+                  setPicLoading={(value: boolean) => setPicLoading(value)}
+                />
               </Stack>
             </Grid>
             <Grid
               item
-              sx={{ display: "flex", justifyContent: "center" }}
-              xs={6}
+              xs={12}
               md={6}
+              sx={{ display: "flex", justifyContent: "center" }}
             >
               <Box
                 sx={{
@@ -65,8 +67,10 @@ function ProfilePage() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  width: "30%",
-                  height: "100%",
+                  width: "150px",
+                  height: "150px",
+                  overflow: "hidden",
+                  borderRadius: "50%",
                 }}
               >
                 {picLoading && (
@@ -77,10 +81,13 @@ function ProfilePage() {
                   />
                 )}
                 <Box
-                  sx={{ position: "absolute", objectFit: "cover" }}
+                  sx={{
+                    position: "absolute",
+                    objectFit: "cover",
+                  }}
                   component="img"
-                  width="90%"
-                  height="80%"
+                  width="100%"
+                  height="100%"
                   hidden={picLoading}
                   src={
                     user.profilePic ??
