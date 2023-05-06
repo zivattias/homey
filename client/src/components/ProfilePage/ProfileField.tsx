@@ -29,13 +29,24 @@ export default function ProfileField({
   );
   const [isEmailExists, setIsEmailExists] = React.useState(false);
   const [isChanged, setIsChanged] = React.useState(false);
+  const [isEmailValid, setIsEmailValid] = React.useState<boolean>(true);
   const alert = useAlert();
   const theme = useTheme();
   const user = useUser();
   const dispatch = useUserDispatch();
 
+  React.useEffect(() => {
+    if (target == "email" && user.email !== fieldValue) {
+      setIsEmailValid(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(fieldValue)
+      );
+    } else {
+      setIsEmailValid(true);
+    }
+  }, [fieldValue]);
+
   const validateEmail = () => {
-    if (target == "email" && user.email != fieldValue) {
+    if (target == "email" && user.email != fieldValue && isEmailValid) {
       setIsChanged(false);
       setIsEmailExists(false);
       setEmailExistsTest(true);
@@ -54,14 +65,6 @@ export default function ProfileField({
       checkEmail();
     }
   };
-
-  // const handleChange = (fieldName: keyof User, value: string) => {
-  //   setFieldValue(value);
-  //   const nextState = { [toSnakeCase(fieldName)]: value };
-  //   const result = registerSuite(nextState, toSnakeCase(fieldName));
-  // };
-
-  // const suiteResult = registerSuite.get();
 
   const updateField = async () => {
     try {
@@ -134,11 +137,11 @@ export default function ProfileField({
               disabled={
                 fieldValue == user[target] ||
                 fieldValue == "" ||
+                !isEmailValid ||
                 (target != "email" && fieldValue.length < 2) ||
                 (target == "email" && isEmailExists) ||
                 (target == "email" && Boolean(emailExistsTest)) ||
                 (target == "email" && isChanged)
-                // suiteResult.hasErrors(toSnakeCase(target))
               }
               sx={{
                 borderTopLeftRadius: "0",
@@ -172,9 +175,15 @@ export default function ProfileField({
                 Verifying email...
               </Typography>
             </Box>
-          ) : user.email !== fieldValue && emailExistsTest !== null ? (
+          ) : user.email !== fieldValue &&
+            emailExistsTest !== null &&
+            isEmailValid ? (
             <Typography sx={{ color: "#55A630", fontSize: ".9em" }}>
               Email is available!
+            </Typography>
+          ) : !isEmailValid ? (
+            <Typography sx={{ color: "#8B0000", fontSize: ".9em" }}>
+              Email is invalid!
             </Typography>
           ) : (
             ""
