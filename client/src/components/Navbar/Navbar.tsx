@@ -283,11 +283,15 @@ function Navbar() {
             </Box>
           </Box>
 
-          <Box sx={{ px: 2 }}>
+          <Box sx={{ px: 1 }}>
             <Tooltip title="Open settings">
               <IconButton
                 onClick={handleOpenUserMenu}
-                sx={{ p: 0, position: "relative" }}
+                sx={{
+                  position: "relative",
+                  height: "33px",
+                  width: "33px",
+                }}
               >
                 {isAvatarLoading && (
                   <CircularProgress size="1em" sx={{ position: "absolute" }} />
@@ -295,7 +299,7 @@ function Navbar() {
                 <Avatar
                   alt="User profile picture"
                   src={user.profilePic ?? ""}
-                  sx={{ position: "absolute" }}
+                  sx={{ position: "absolute", pointerEvents: "none" }}
                   imgProps={{
                     onLoad: () => setIsAvatarLoading(false),
                     hidden: isAvatarLoading,
