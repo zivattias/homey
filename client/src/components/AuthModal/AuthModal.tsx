@@ -68,7 +68,6 @@ export default function AuthModal({
     if (user.accessToken && user.refreshToken) {
       const loadData = async () => {
         const userData = await getUserData();
-        console.log(userData);
         dispatch({
           type: USER_ACTIONS.POPULATE,
           payload: {
@@ -123,7 +122,6 @@ export default function AuthModal({
               refreshToken: response.data.refresh,
             },
           });
-          console.log(response);
           alert.show(`Welcome back, ${loginFormValues.username}`, {
             type: "success",
           });

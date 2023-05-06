@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { Apartment, useApartment } from "../../context/ApartmentContext";
 import { Theme } from "@mui/material/styles/createTheme";
-import ProgressBar from "./ProgressBar";
 
 function FirstStage({
   theme,
@@ -22,7 +21,7 @@ function FirstStage({
   handleChange(
     attr: keyof Apartment
   ): (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStages: (event: React.FormEvent) => void;
+  handleStages: (event: React.FormEvent, stage: number) => void;
 }) {
   const apartment = useApartment();
 
@@ -69,8 +68,11 @@ function FirstStage({
           </Typography>
           <Box
             component="form"
-            sx={{ display: "flex", flexDirection: "column" }}
-            onSubmit={(event) => handleStages(event)}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+            onSubmit={(event) => handleStages(event, 1)}
           >
             <TextField
               sx={{ width: "100%", mb: "1em" }}
@@ -118,7 +120,11 @@ function FirstStage({
               variant="outlined"
             />
             <Divider></Divider>
-            <Button sx={{ my: "1em" }} variant="contained" type="submit">
+            <Button
+              sx={{ marginTop: "1em", mx: "auto", width: "50%" }}
+              variant="contained"
+              type="submit"
+            >
               Next
             </Button>
           </Box>

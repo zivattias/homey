@@ -4,7 +4,7 @@
 
 Homey is a versatile end-to-end web application aimed at addressing the housing crisis in Tel-Aviv. The application allows users to both view and post property listings, and facilitates communication between listing-owners and tenants to explore potential housing options.
 
-Homey is written in **Python** and **React** (TypeScript), and hosted on AWS.
+Homey is written in **Python** and **TypeScript** (React), and hosted on **AWS (RDS, EC2, S3)**.
 
 > **Note:** The project is still a work in progress.
 
@@ -22,7 +22,7 @@ Homey is written in **Python** and **React** (TypeScript), and hosted on AWS.
 -   Frontend:
 -   [x] Material UI React components
 -   [x] Dark/light mode theme
--   [ ] Local storage utilization for automatic login (refresh token as HTTPOnly cookie - _WIP_)
+-   [x] Local storage utilization for automatic login (refresh token as HTTPOnly cookie - _WIP_)
 -   [ ] AI implementation for enhanced entities search
 -   [ ] Real-time messaging app between users
 
@@ -30,7 +30,8 @@ Homey is written in **Python** and **React** (TypeScript), and hosted on AWS.
 
 -   [Django](https://github.com/django/django) - Web framework for Python
 -   [DRF](https://github.com/encode/django-rest-framework) - REST API for Django
--   [SimpleJWT](https://github.com/jazzband/djangorestframework-simplejwt) - JWT plugin
+-   [SimpleJWT](https://github.com/jazzband/djangorestframework-simplejwt) - JSON Web Token library
+-   [React](https://github.com/facebook/react) - User interface framework
 -   [react-router-dom](https://github.com/remix-run/react-router) - Declarative routing for React
 -   [lottie-react](https://github.com/Gamote/lottie-react) - Lightweight React lib for rendering JSON-based animations
 -   [Vest](https://github.com/ealush/vest) - Declarative validations framework

@@ -29,7 +29,6 @@ import { useAlert } from "react-alert";
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
 const loggedOutSettings = ["Login", "Register"];
-// TODO: add page/setting-to-function mapped object for better .map() below (hint: search for 'settings')
 
 function Navbar() {
   const alert = useAlert();
@@ -42,7 +41,6 @@ function Navbar() {
   const navigate = useNavigate();
 
   const [isAvatarLoading, setIsAvatarLoading] = React.useState<boolean>(true);
-  console.log(user);
 
   // Settings-Functions map object:
   const settingsFuncsObj: { [key: string]: () => void } = {
@@ -306,7 +304,9 @@ function Navbar() {
                   }}
                 >
                   {user.accessToken && user.firstName && user.lastName
-                    ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
+                    ? `${user.firstName.charAt(0).toUpperCase()}${user.lastName
+                        .charAt(0)
+                        .toUpperCase()}`
                     : null}
                 </Avatar>
               </IconButton>

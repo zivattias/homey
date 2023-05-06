@@ -15,7 +15,7 @@ const AlertTemplate = ({
     backgroundColor: "white",
     color:
       options.type == "error"
-        ? "red"
+        ? "#8B0000"
         : options.type == "success"
         ? "#4BB543"
         : "black",
@@ -30,7 +30,7 @@ const AlertTemplate = ({
     height: "50px",
     border:
       options.type == "error"
-        ? "1px solid red"
+        ? "1px solid #8B0000"
         : options.type == "success"
         ? "1px solid #4BB543"
         : "1px solid black",
