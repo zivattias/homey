@@ -3,6 +3,7 @@ from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
+from ..models import UserProfile
 
 from ..permissions.UserUpdatePermissions import UserUpdatePermissions
 
@@ -52,6 +53,19 @@ def email_exists(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# Update UserProfile.profile_pic
+@api_view(["PATCH"])
+def update_profile_pic(request, user_id):
+    if not request.data["profile_pic"]:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    if not request.user.is_staff and request.user.id != user_id:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    user_profile = UserProfile.objects.get(user__id=user_id)
+    user_profile.profile_pic = request.data["profile_pic"]
+    user_profile.save()
+    return Response(status=status.HTTP_200_OK)
+
+
 # Update user details, e.g. first_name (partial)
 class UpdateUserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = UserSerializer
@@ -63,17 +77,15 @@ class UpdateUserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         if self.request.user.is_staff:
             return User.objects.get(id=user_id)
         return self.queryset.get(id=user_id)
-    
+
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_queryset(kwargs['user_id'])
+        partial = kwargs.pop("partial", False)
+        instance = self.get_queryset(kwargs["user_id"])
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
-    

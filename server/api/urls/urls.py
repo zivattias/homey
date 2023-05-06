@@ -15,12 +15,14 @@ from ..viewsets.UserViewSets import (
     UserProfileView,
     user_exists,
     email_exists,
+    update_profile_pic
 )
 from ..viewsets.ApartmentViewSets import (
     ApartmentViewSet,
     like_apartment,
     ApartmentPhotoViewSet,
 )
+from ..viewsets.GetS3PresignedURL import get_s3_presigned_URL
 
 router = DefaultRouter()
 router.register(r"apartments", viewset=ApartmentViewSet)
@@ -54,5 +56,15 @@ urlpatterns = [
         "users/<int:user_id>/",
         UpdateUserViewSet.as_view({"patch": "partial_update", "put": "update"}),
         name="update_user",
+    ),
+    path(
+        "users/<int:user_id>/profile_pic/",
+        update_profile_pic,
+        name="update_user_profile_picture",
+    ),
+    path(
+        "upload_profile_pic/<str:content_type>/",
+        get_s3_presigned_URL,
+        name="upload_profile_pic",
     ),
 ] + router.urls

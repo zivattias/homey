@@ -87,9 +87,6 @@ class ApartmentPhotoViewSet(
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
 
 # Like & unlike an apartment
 @api_view(["PUT", "DELETE"])
