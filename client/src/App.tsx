@@ -12,44 +12,50 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
 import refreshAccessToken from "./utils/funcs/refreshAccessToken";
 import UploadPage from "./pages/UploadPage";
 import ProfilePage from "./pages/ProfilePage";
+import { useAlert } from "react-alert";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
 
 function App() {
+  const alert = useAlert();
   const dispatch = useUserDispatch();
   const [refreshToken, _] = useLocalStorage("refreshToken", "");
 
   React.useEffect(() => {
     const getAccessToken = async () => {
-      const accessToken = await refreshAccessToken(refreshToken as string);
-      if (accessToken) {
-        dispatch({
-          type: USER_ACTIONS.LOGIN,
-          payload: {
-            accessToken: accessToken,
-            refreshToken: refreshToken as string,
-          },
-        });
-        const response = await sendRequest(
-          "get",
-          FULL_API_ENDPOINT + API_ENDPOINTS.ME,
-          accessToken,
-          {}
-        );
-        if (response) {
+      try {
+        const accessToken = await refreshAccessToken(refreshToken as string);
+        if (accessToken) {
           dispatch({
-            type: USER_ACTIONS.POPULATE,
+            type: USER_ACTIONS.LOGIN,
             payload: {
-              firstName: response.data.first_name,
-              lastName: response.data.last_name,
-              isStaff: response.data.is_staff,
-              profilePic: response.data.profile_pic,
-              ...response.data,
+              accessToken: accessToken,
+              refreshToken: refreshToken as string,
             },
           });
+          const response = await sendRequest(
+            "get",
+            FULL_API_ENDPOINT + API_ENDPOINTS.ME,
+            accessToken,
+            {}
+          );
+          if (response) {
+            dispatch({
+              type: USER_ACTIONS.POPULATE,
+              payload: {
+                firstName: response.data.first_name,
+                lastName: response.data.last_name,
+                isStaff: response.data.is_staff,
+                profilePic: response.data.profile_pic,
+                ...response.data,
+              },
+            });
+          }
         }
+      } catch (e: any) {
+        alert.show("Session expired, please relog!", { type: "info" });
       }
     };
     if (refreshToken) {
