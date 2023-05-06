@@ -3,10 +3,10 @@ import { useUser } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
 import {
   Box,
+  CircularProgress,
   Container,
   Divider,
   Grid,
-  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -17,6 +17,9 @@ import PictureField from "../components/ProfilePage/PictureField";
 function ProfilePage() {
   const user = useUser();
   const theme = useTheme();
+
+  const [picLoading, setPicLoading] = React.useState<boolean>(true);
+
   return !user.accessToken ? (
     <Navigate to="/" />
   ) : (
@@ -57,13 +60,35 @@ function ProfilePage() {
               md={6}
             >
               <Box
-                component="img"
-                width={150}
-                src={
-                  user.profilePic ??
-                  "https://homey-bucket-public.s3.amazonaws.com/Portrait_Placeholder.png"
-                }
-              ></Box>
+                sx={{
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "30%",
+                  height: "100%",
+                }}
+              >
+                {picLoading && (
+                  <CircularProgress
+                    sx={{
+                      position: "absolute",
+                    }}
+                  />
+                )}
+                <Box
+                  sx={{ position: "absolute", objectFit: "cover" }}
+                  component="img"
+                  width="90%"
+                  height="80%"
+                  hidden={picLoading}
+                  src={
+                    user.profilePic ??
+                    "https://homey-bucket-public.s3.amazonaws.com/Portrait_Placeholder.png"
+                  }
+                  onLoad={() => setPicLoading(false)}
+                ></Box>
+              </Box>
             </Grid>
           </Grid>
         </Box>
