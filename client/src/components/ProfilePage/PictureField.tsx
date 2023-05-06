@@ -1,43 +1,81 @@
 import { LoadingButton } from "@mui/lab";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import React from "react";
-// import AWS from "aws-sdk";
-import { v4 as uuid4 } from "uuid";
 import { useAlert } from "react-alert";
+import sendRequest from "../../utils/funcs/sendRequest";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
+import {
+  USER_ACTIONS,
+  useUser,
+  useUserDispatch,
+} from "../../context/UserContext";
+import axios from "axios";
 
 function PictureField() {
-  const [imageFile, setImageFile] = React.useState<File>();
+  const [imageFile, setImageFile] = React.useState<Blob | undefined>(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const alert = useAlert();
+  const user = useUser();
+  const dispatch = useUserDispatch();
+  const theme = useTheme();
+
   const handlePhotoUpload = async (event: React.FormEvent) => {
+    setLoading(true);
     event.preventDefault();
-    const uuid = uuid4();
+    const response = await sendRequest(
+      "post",
+      FULL_API_ENDPOINT +
+        API_ENDPOINTS.PROFILE_PIC +
+        `${imageFile!.type.split("/")[1]}/`,
+      user.accessToken!,
+      {}
+    );
 
-    // AWS.config.update({
-    //   credentials: {
-    //     accessKeyId: 
-    //     secretAccessKey: 
-    //   },
-    //   region: ,
-    // });
-    // const s3 = new AWS.S3();
+    if (response.data) {
+      const { url } = response.data;
+      const { key, AWSAccessKeyId, policy, signature } = response.data.fields;
 
-    // const fileName = `profile_photos/${uuid}.${imageFile?.type.split("/")[1]}`;
+      const fields = [
+        { name: "key", value: key },
+        { name: "AWSAccessKeyId", value: AWSAccessKeyId },
+        { name: "policy", value: policy },
+        { name: "signature", value: signature },
+        { name: "file", value: imageFile!, filename: key.split("/")[1] },
+      ];
 
-    // const s3Object = {
-    //   Bucket: "homey-bucket-public",
-    //   Key: fileName,
-    //   Body: imageFile,
-    //   ContentType: imageFile?.type,
-    //   ACL: "public-read",
-    // };
+      const formData = new FormData();
 
-    // try {
-    //   await s3.upload(s3Object).promise();
-    //   alert.show("Image uploaded successfully!", { type: "success" });
-    // } catch (e) {
-    //   console.error(e);
-    //   alert.show("Error uploading the photo!", { type: "error" });
-    // }
+      fields.forEach((field) => {
+        field.name == "file"
+          ? formData.append(field.name, field.value, field.filename)
+          : formData.append(field.name, field.value);
+      });
+
+      const S3Response = await axios.post(url, formData);
+      if (S3Response.status === 204) {
+        const response = await sendRequest(
+          "patch",
+          FULL_API_ENDPOINT + API_ENDPOINTS.USERS + `${user.id}/profile_pic/`,
+          user.accessToken!,
+          {
+            profile_pic: url + key,
+          }
+        );
+        if (response.status == 200) {
+          dispatch({
+            type: USER_ACTIONS.UPDATE_FIELD,
+            payload: { profilePic: url + key },
+          });
+          setLoading(false);
+          alert.show("Image uplodaded", { type: "success" });
+        } else {
+          alert.show("Couldn't upload image", { type: "error" });
+        }
+        setImageFile(undefined);
+      }
+    } else {
+      alert.show("Error connecting to server", { type: "error" });
+    }
   };
 
   return (
@@ -51,7 +89,13 @@ function PictureField() {
             className="custom-file-input"
             onChange={(event) => setImageFile(event.target.files?.[0])}
           />
-          <label className="custom-file-label">
+          <label
+            style={{
+              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
+              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
+            }}
+            className="custom-file-label"
+          >
             {imageFile?.name ?? "Choose a photo"}
           </label>
         </div>
@@ -66,6 +110,7 @@ function PictureField() {
             variant="outlined"
             type="submit"
             disabled={!Boolean(imageFile)}
+            loading={loading}
           >
             Upload
           </LoadingButton>
