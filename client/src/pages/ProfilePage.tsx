@@ -20,6 +20,12 @@ function ProfilePage() {
 
   const [picLoading, setPicLoading] = React.useState<boolean>(true);
 
+  React.useEffect(() => {
+    if (!user.profilePic) {
+      setPicLoading(false);
+    }
+  }, [user.profilePic]);
+
   return !user.accessToken ? (
     <Navigate to="/" />
   ) : (
