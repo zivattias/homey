@@ -49,6 +49,10 @@ function Navbar() {
       navigate("/profile");
       handleCloseUserMenu();
     },
+    Account: () => {
+      navigate("/account");
+      handleCloseUserMenu();
+    },
   };
 
   const theme = useTheme();

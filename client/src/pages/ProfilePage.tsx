@@ -26,7 +26,7 @@ function ProfilePage() {
     <>
       <Container sx={{ marginY: 5 }}>
         <Typography variant="h5" fontWeight={600}>
-          Personal Account Settings
+          Profile Settings
         </Typography>
       </Container>
       <Divider />

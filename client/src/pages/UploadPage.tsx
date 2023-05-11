@@ -30,7 +30,7 @@ function UploadPage() {
 
   const handleStages = (event: React.FormEvent, whereTo: number) => {
     event.preventDefault();
-    setAtStage(stage => stage + whereTo)
+    setAtStage((stage) => stage + whereTo);
   };
 
   const stagesMap: { [key: number]: JSX.Element } = {

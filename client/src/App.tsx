@@ -5,7 +5,7 @@ import Root from "./pages/Root";
 import NotFound from "./pages/NotFound";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, useMediaQuery } from "@mui/material";
-import { USER_ACTIONS, useUserDispatch } from "./context/UserContext";
+import { USER_ACTIONS, useUser, useUserDispatch } from "./context/UserContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 import sendRequest from "./utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "./utils/consts";
@@ -13,6 +13,7 @@ import refreshAccessToken from "./utils/funcs/refreshAccessToken";
 import UploadPage from "./pages/UploadPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAlert } from "react-alert";
+import AccountPage from "./pages/AccountPage";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -21,6 +22,8 @@ export const ColorModeContext = React.createContext({
 function App() {
   const alert = useAlert();
   const dispatch = useUserDispatch();
+  const user = useUser();
+  console.log(user);
   const [refreshToken, _] = useLocalStorage("refreshToken", "");
 
   React.useEffect(() => {
@@ -97,6 +100,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/account" element={<AccountPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

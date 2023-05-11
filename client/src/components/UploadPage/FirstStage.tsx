@@ -12,7 +12,7 @@ import {
 import { Apartment, useApartment } from "../../context/ApartmentContext";
 import { Theme } from "@mui/material/styles/createTheme";
 
-function FirstStage({
+const FirstStage = ({
   theme,
   handleChange,
   handleStages,
@@ -22,7 +22,7 @@ function FirstStage({
     attr: keyof Apartment
   ): (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleStages: (event: React.FormEvent, stage: number) => void;
-}) {
+}) => {
   const apartment = useApartment();
 
   return (
@@ -132,6 +132,6 @@ function FirstStage({
       </Box>
     </Container>
   );
-}
+};
 
 export default FirstStage;
