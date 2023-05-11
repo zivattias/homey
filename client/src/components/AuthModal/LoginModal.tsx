@@ -12,6 +12,11 @@ import { FormValues } from "./AuthModal";
 import { loginSuite } from "../../utils/suites/loginSuite";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { GoogleLogin } from "@react-oauth/google";
+import { useAlert } from "react-alert";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
+import { useUserDispatch, USER_ACTIONS } from "../../context/UserContext";
+import axios from "axios";
 
 interface LoginModalProps {
   open: boolean;
@@ -56,6 +61,45 @@ function LoginModal({
   };
 
   const suiteResult = loginSuite.get();
+  const alert = useAlert();
+  const dispatch = useUserDispatch();
+
+  const handleGoogleLogin = async (token: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        FULL_API_ENDPOINT +
+          API_ENDPOINTS.AUTH.BASE +
+          API_ENDPOINTS.AUTH.GOOGLE_OAUTH,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+      switch (response.status) {
+        case 200:
+        case 201:
+          dispatch({
+            type: USER_ACTIONS.LOGIN,
+            payload: {
+              accessToken: response.data.access,
+              refreshToken: response.data.refresh,
+            },
+          });
+          alert.show(`Welcome!`, { type: "success" });
+          break;
+        default:
+          alert.show("Oops, an error occurred", { type: "error" });
+      }
+    } catch (error: any) {
+      alert.show(error.response.data.message, { type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -115,6 +159,9 @@ function LoginModal({
                       component="button"
                       type="button"
                       sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                         backgroundColor: "transparent",
                         border: "none",
                       }}
@@ -141,6 +188,7 @@ function LoginModal({
               }
             />
             <LoadingButton
+              sx={{ marginBottom: "1em" }}
               disabled={
                 loginFormValues.username == "" ||
                 loginFormValues.password == "" ||
@@ -151,6 +199,27 @@ function LoginModal({
             >
               Login
             </LoadingButton>
+            <Divider sx={{ width: "100%", mb: "1em" }} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography marginBottom="1em" variant="body2">
+                Sign up and log in with Google
+              </Typography>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  handleGoogleLogin(String(credentialResponse.credential));
+                }}
+                onError={() => {
+                  alert.show("Bad authentication", { type: "error" });
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       </Modal>

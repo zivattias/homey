@@ -206,6 +206,9 @@ function RegisterModal({
                       component="button"
                       type="button"
                       sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                         backgroundColor: "transparent",
                         border: "none",
                       }}

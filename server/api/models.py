@@ -32,6 +32,7 @@ class UserProfile(models.Model):
         User, on_delete=models.CASCADE, related_name="user_profile"
     )
     profile_pic = models.URLField(max_length=512, null=True)
+    google_oauth = models.BooleanField(default=False)
 
     class Meta:
         db_table = "user_profiles"

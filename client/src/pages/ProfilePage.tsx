@@ -86,6 +86,7 @@ function ProfilePage() {
                     objectFit: "cover",
                   }}
                   component="img"
+                  referrerPolicy="no-referrer"
                   width="100%"
                   height="100%"
                   hidden={picLoading}

@@ -1,28 +1,25 @@
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-from rest_framework.routers import DefaultRouter
-
 from django.urls import path
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from ..viewsets.ReviewViewSet import ReviewViewSet
-from ..viewsets.ProposalViewSet import ProposalViewSet
+from ..viewsets.ApartmentViewSets import (
+    ApartmentPhotoViewSet,
+    ApartmentViewSet,
+    like_apartment,
+)
+from ..viewsets.GetS3PresignedURL import get_s3_presigned_URL
+from ..viewsets.JWTViewSets import BlacklistView, RegistrationView
 from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
-from ..viewsets.JWTViewSets import RegistrationView, BlacklistView
+from ..viewsets.ProposalViewSet import ProposalViewSet
+from ..viewsets.ReviewViewSet import ReviewViewSet
 from ..viewsets.UserViewSets import (
     UpdateUserViewSet,
     UserProfileView,
-    user_exists,
     email_exists,
-    update_profile_pic
+    google_oauth,
+    update_profile_pic,
+    user_exists,
 )
-from ..viewsets.ApartmentViewSets import (
-    ApartmentViewSet,
-    like_apartment,
-    ApartmentPhotoViewSet,
-)
-from ..viewsets.GetS3PresignedURL import get_s3_presigned_URL
 
 router = DefaultRouter()
 router.register(r"apartments", viewset=ApartmentViewSet)
@@ -33,6 +30,7 @@ router.register(r"reviews", viewset=ReviewViewSet)
 urlpatterns = [
     path("auth/register/", RegistrationView.as_view(), name="register"),
     path("auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("auth/google-oauth/", google_oauth, name="google-oauth"),
     path("auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/logout/", BlacklistView.as_view(), name="logout"),
     path("me/", UserProfileView, name="profile"),

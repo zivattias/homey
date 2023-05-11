@@ -301,6 +301,7 @@ function Navbar() {
                   imgProps={{
                     onLoad: () => setIsAvatarLoading(false),
                     hidden: isAvatarLoading,
+                    referrerPolicy: "no-referrer",
                   }}
                 >
                   {user.accessToken && user.firstName && user.lastName

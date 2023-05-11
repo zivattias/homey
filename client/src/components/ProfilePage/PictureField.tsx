@@ -96,6 +96,7 @@ function PictureField({
           />
           <label
             style={{
+              overflow: "hidden",
               backgroundColor: theme.palette.mode == "dark" ? "black" : "",
               color: theme.palette.mode == "dark" ? "#fafafa" : "black",
             }}

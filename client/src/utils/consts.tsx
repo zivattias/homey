@@ -14,6 +14,7 @@ export const FULL_API_ENDPOINT =
 export const API_ENDPOINTS = {
     AUTH: {
         BASE: "auth/",
+        GOOGLE_OAUTH: "google-oauth/",
         LOGIN: "login/",
         REGISTER: "register/",
         REFRESH: "refresh/",
