@@ -30,8 +30,8 @@ function PictureField({
     const response = await sendRequest(
       "post",
       FULL_API_ENDPOINT +
-        API_ENDPOINTS.PROFILE_PIC +
-        `${imageFile!.type.split("/")[1]}/`,
+        API_ENDPOINTS.UPLOAD_PIC +
+        `profile_pics/${imageFile!.type.split("/")[1]}/`,
       user.accessToken!,
       {}
     );

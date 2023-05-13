@@ -24,6 +24,7 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { useUser } from "../../context/UserContext";
 import convertCamelToSnake from "../../utils/funcs/convertCamelToSnake";
 import { LoadingButton } from "@mui/lab";
+import { useImages } from "../../context/ApartmentImageContext";
 
 function ThirdStage({
   theme,
@@ -50,7 +51,7 @@ function ThirdStage({
       payload: updatedAttributes,
     });
   };
-
+  const images = useImages();
   const user = useUser();
   const apartment = useApartment();
   const dispatch = useApartmentDispatch();
@@ -66,6 +67,7 @@ function ThirdStage({
       { ...snakeCaseApartmentAttributes }
     );
     if (response.status === 201) {
+      console.log(response.data);
       dispatch({
         type: ADD_APARTMENT_ACTIONS.RESET_FORM,
         payload: {},
@@ -73,6 +75,7 @@ function ThirdStage({
       setCreated(true);
     }
     setLoading(false);
+    console.log(images);
 
     const updatedCheckboxes = [...checkboxes];
     updatedCheckboxes.forEach((checkbox) => (checkbox.value = false));
@@ -113,10 +116,7 @@ function ThirdStage({
               display: "flex",
               flexDirection: "column",
             }}
-            onSubmit={(event) => {
-              setLoading(true);
-              handleSubmit(event);
-            }}
+            onSubmit={(event) => handleStages(event, 1)}
           >
             <FormGroup>
               {checkboxes.map((checkbox, index) => {
@@ -145,14 +145,13 @@ function ThirdStage({
               })}
             </FormGroup>
             <Divider></Divider>
-            <LoadingButton
-              loading={loading}
+            <Button
               sx={{ my: "1em", mx: "auto", width: "60%" }}
               variant="contained"
               type="submit"
             >
-              Submit your Apartment
-            </LoadingButton>
+              Review
+            </Button>
             <Button
               sx={{ mx: "auto", width: "60%" }}
               disabled={loading}

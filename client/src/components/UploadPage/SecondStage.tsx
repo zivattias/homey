@@ -4,26 +4,24 @@ import {
   Button,
   Container,
   Divider,
+  Grid,
   Stack,
-  TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import { Apartment, useApartment } from "../../context/ApartmentContext";
 import { Theme } from "@mui/material/styles/createTheme";
+import ImageField from "./ImageField";
+import { useImages } from "../../context/ApartmentImageContext";
 
 const SecondStage = ({
   theme,
-  handleChange,
   handleStages,
 }: {
   theme: Theme;
-  handleChange(
-    attr: keyof Apartment
-  ): (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleStages: (event: React.FormEvent, stage: number) => void;
 }) => {
-  const apartment = useApartment();
+  const IMAGE_KEY_LIST = [0, 1, 2, 3, 4];
+  const MIN_REQUIRED_IMAGES = 5;
+  const images = useImages();
 
   return (
     <Container
@@ -48,77 +46,39 @@ const SecondStage = ({
       >
         <Stack gap={2}>
           <Typography component="h1" variant="h5">
-            Add your apartment photos!
+            Let's add some photos to your apartment.
           </Typography>
           <Typography>
-            Fill out this form to add your apartment to your account. You will
-            be able to {""}
-            <Tooltip title="* Display your apartment on Homey">
-              <Typography
-                component="span"
-                sx={{
-                  display: "inline",
-                  fontWeight: "bold",
-                }}
-              >
-                activate*
-              </Typography>
-            </Tooltip>
-            {""} it later in the process.
+            Upload at least {MIN_REQUIRED_IMAGES - 2} photos. Photos are vital
+            for the success of your housing listing.
           </Typography>
           <Box
             component="form"
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             onSubmit={(event) => handleStages(event, 1)}
           >
-            <TextField
-              sx={{ width: "100%", mb: "1em" }}
-              value={apartment.street}
-              onChange={handleChange("street")}
-              id="street"
-              label="Street Name"
-              variant="outlined"
-            />
-            <TextField
-              type="number"
-              sx={{ width: "100%", mb: "1em" }}
-              value={apartment.streetNum ?? ""}
-              onChange={handleChange("streetNum")}
-              id="street_num"
-              label="Street Number"
-              variant="outlined"
-            />
-            <TextField
-              sx={{ width: "100%", mb: "1em" }}
-              type="number"
-              value={apartment.aptNum ?? ""}
-              onChange={handleChange("aptNum")}
-              id="apt_num"
-              label="Apartment Number"
-              variant="outlined"
-            />
-            <Divider></Divider>
-            <TextField
-              sx={{ width: "100%", my: "1em" }}
-              type="number"
-              value={apartment.zipCode}
-              onChange={handleChange("zipCode")}
-              id="zip_code"
-              label="Zip Code"
-              variant="outlined"
-            />
-            <TextField
-              sx={{ width: "100%", mb: "1em" }}
-              type="number"
-              value={apartment.squareMeter ?? ""}
-              onChange={handleChange("squareMeter")}
-              id="square_meter"
-              label="Square Meter"
-              variant="outlined"
-            />
-            <Divider></Divider>
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              container
+              gap={2}
+            >
+              {IMAGE_KEY_LIST.map((key) => (
+                <ImageField key={key} image_key={key} />
+              ))}
+            </Grid>
+            <Divider sx={{ width: "100%", my: "1em" }}></Divider>
             <Button
-              sx={{ marginTop: "1em", mx: "auto", width: "50%" }}
+              disabled={!(images.length >= MIN_REQUIRED_IMAGES - 2)}
+              sx={{ mx: "auto", width: "50%" }}
               variant="contained"
               type="submit"
             >
