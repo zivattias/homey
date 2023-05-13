@@ -33,7 +33,7 @@ interface LoginModalProps {
   loading: boolean;
 }
 
-function LoginModal({
+const LoginModal = ({
   open,
   onClose,
   style,
@@ -42,7 +42,7 @@ function LoginModal({
   loginFormValues,
   setLoginFormValues,
   loading,
-}: LoginModalProps) {
+}: LoginModalProps) => {
   const [formState, setFormState] = React.useState({});
   const [visibility, setVisibility] = React.useState<boolean>(false);
 
@@ -130,7 +130,7 @@ function LoginModal({
               handleSubmission(event, loginFormValues, "login");
             }}
             sx={{
-              width: { xs: "90%", sm: "90%" },
+              width: { xs: "90%" },
               display: "flex",
               flexDirection: "column",
               py: 2,
@@ -212,6 +212,8 @@ function LoginModal({
                 Sign up and log in with Google
               </Typography>
               <GoogleLogin
+                type="icon"
+                size="large"
                 onSuccess={async (credentialResponse) => {
                   handleGoogleLogin(String(credentialResponse.credential));
                 }}
@@ -225,6 +227,6 @@ function LoginModal({
       </Modal>
     </React.Fragment>
   );
-}
+};
 
 export default LoginModal;

@@ -1,7 +1,9 @@
-import { create, test, enforce, only } from "vest";
+import { create, test, enforce, only, include } from "vest";
 
 export const passwordSuite = create((data = {}, currentField) => {
   only(currentField);
+
+  include("confirm_password").when("password");
 
   test("password", "Password is required", () => {
     enforce(data.password).isNotBlank();
