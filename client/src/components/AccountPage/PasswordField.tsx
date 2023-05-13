@@ -68,81 +68,83 @@ const PasswordField = () => {
         handleSubmit();
       }}
     >
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <span
+      <Box width={{ xs: "100%", sm: "80%", md: "50%" }}>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span
+              style={{
+                backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
+                color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+              }}
+              className="input-group-text"
+              id="basic-addon1"
+            >
+              Password
+            </span>
+          </div>
+          <input
+            disabled={loading}
             style={{
-              backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
-              color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
+              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
             }}
-            className="input-group-text"
-            id="basic-addon1"
-          >
-            Password
-          </span>
+            type="password"
+            className="form-control"
+            placeholder="Your new password"
+            aria-label="Password"
+            aria-describedby="basic-addon1"
+            value={passwordFields.password}
+            onChange={(event) =>
+              handleChange(event, "password", event.target.value)
+            }
+            id="password"
+          />
         </div>
-        <input
-          disabled={loading}
-          style={{
-            backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-            color: theme.palette.mode == "dark" ? "#fafafa" : "black",
-          }}
-          type="password"
-          className="form-control"
-          placeholder="Your new password"
-          aria-label="Password"
-          aria-describedby="basic-addon1"
-          value={passwordFields.password}
-          onChange={(event) =>
-            handleChange(event, "password", event.target.value)
-          }
-          id="password"
-        />
-      </div>
-      {suiteResult.hasErrors("password") && (
-        <Typography fontSize=".9em" marginBottom="1em" color="#8B0000">
-          {suiteResult.getErrors("password")[0]}
-        </Typography>
-      )}
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <span
+        {suiteResult.hasErrors("password") && (
+          <Typography fontSize=".9em" marginBottom="1em" color="#8B0000">
+            {suiteResult.getErrors("password")[0]}
+          </Typography>
+        )}
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span
+              style={{
+                backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
+                color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+              }}
+              className="input-group-text"
+              id="basic-addon1"
+            >
+              Confirm Password
+            </span>
+          </div>
+          <input
+            disabled={loading}
             style={{
-              backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
-              color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
+              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
             }}
-            className="input-group-text"
-            id="basic-addon1"
-          >
-            Confirm Password
-          </span>
+            type="password"
+            className="form-control"
+            placeholder="Your new password again"
+            aria-label="Password Confirm"
+            aria-describedby="basic-addon1"
+            value={passwordFields.confirm_password}
+            onChange={(event) =>
+              handleChange(event, "confirm_password", event.target.value)
+            }
+            id="confirm_password"
+          />
         </div>
-        <input
-          disabled={loading}
-          style={{
-            backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-            color: theme.palette.mode == "dark" ? "#fafafa" : "black",
-          }}
-          type="password"
-          className="form-control"
-          placeholder="Your new password again"
-          aria-label="Password Confirm"
-          aria-describedby="basic-addon1"
-          value={passwordFields.confirm_password}
-          onChange={(event) =>
-            handleChange(event, "confirm_password", event.target.value)
-          }
-          id="confirm_password"
-        />
-      </div>
-      {suiteResult.hasErrors("confirm_password") && (
-        <Typography fontSize=".9em" marginBottom="1em" color="#8B0000">
-          {suiteResult.getErrors("confirm_password")[0]}
-        </Typography>
-      )}
+        {suiteResult.hasErrors("confirm_password") && (
+          <Typography fontSize=".9em" marginBottom="1em" color="#8B0000">
+            {suiteResult.getErrors("confirm_password")[0]}
+          </Typography>
+        )}
+      </Box>
       <LoadingButton
         type="submit"
-        sx={{ width: { xs: "60%", sm: "30%", md: "30%" } }}
+        sx={{ width: { xs: "60%", sm: "40%", md: "30%" } }}
         variant="contained"
         disabled={!suiteResult.isValid()}
         loading={loading}
