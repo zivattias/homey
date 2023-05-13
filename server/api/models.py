@@ -39,6 +39,7 @@ class UserProfile(models.Model):
 
 
 class Apartment(TimeStampedModel, models.Model):
+    uuid = models.UUIDField(unique=True)
     user = models.ForeignKey(
         db_column="user_id",
         to=User,
@@ -203,7 +204,9 @@ class LikedApartments(models.Model):
 
 
 class ApartmentPhoto(models.Model):
-    apt = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name="photos")
+    apt = models.ForeignKey(
+        Apartment, on_delete=models.CASCADE, related_name="photos"
+    )
     photo_url = models.URLField()
 
     class Meta:

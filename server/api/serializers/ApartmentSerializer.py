@@ -16,6 +16,7 @@ class ApartmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_kwargs = {
             "user": {"required": False},
+            "uuid": {"required": False},
         }
 
 

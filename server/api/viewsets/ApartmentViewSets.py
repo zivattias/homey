@@ -1,18 +1,22 @@
-from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
-from rest_framework import mixins, status, viewsets, permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.contrib.auth.models import User
+from uuid import uuid4
 
-from ..serializers.ApartmentSerializer import (
-    ApartmentPhotosSerializer,
-    ApartmentSerializer,
-)
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.forms import ValidationError
+from django.shortcuts import get_object_or_404
+from rest_framework import mixins, permissions, status, viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from ..models import Apartment, ApartmentPhoto, LikedApartments
 from ..permissions.ApartmentPermissions import (
     ApartmentPermissions,
     ApartmentPhotoPermissions,
+)
+from ..serializers.ApartmentSerializer import (
+    ApartmentPhotosSerializer,
+    ApartmentSerializer,
 )
 
 
@@ -29,7 +33,9 @@ class ApartmentViewSet(viewsets.ModelViewSet):
         return self.queryset
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        data = request.data.copy()
+        data["uuid"] = str(uuid4())
+        serializer = self.get_serializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.validated_data["user"] = request.user
             serializer.save()
@@ -55,37 +61,60 @@ class ApartmentPhotoViewSet(
     authentication_classes = [JWTAuthentication]
     queryset = ApartmentPhoto.objects.all()
 
-    def get_queryset(self, apt_id):
+    def get_queryset(self, apt_uuid):
         if self.request.user.is_staff:
             return self.queryset
-        return ApartmentPhoto.objects.filter(apt__id=apt_id)
+        return ApartmentPhoto.objects.filter(apt__uuid=apt_uuid)
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data["apt"] = kwargs.get("apt_id")
-        serializer = self.get_serializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = request.data.copy()
+            data["apt"] = Apartment.objects.get(uuid=kwargs.get("apt_uuid")).pk
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            if isinstance(e, ValidationError):
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data={"uuid": "Invalid UUID"}
+                )
+            if isinstance(e, IntegrityError):
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"photo_url": f'{data["photo_url"]} already exists'},
+                )
 
     def destroy(self, request, *args, **kwargs):
-        apt_id = kwargs.get("apt_id")
-        photo_id = kwargs.get("photo_id")
-        instance = get_object_or_404(ApartmentPhoto, apt__id=apt_id, id=photo_id)
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            apt_uuid = kwargs.get("apt_uuid")
+            photo_id = kwargs.get("photo_id")
+            instance = get_object_or_404(
+                ApartmentPhoto, apt__uuid=apt_uuid, id=photo_id
+            )
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ValidationError:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data={"uuid": "Invalid UUID"}
+            )
 
     def list(self, request, *args, **kwargs):
-        apt_id = kwargs.get("apt_id")
-        queryset = self.get_queryset(apt_id=apt_id)
+        try:
+            apt_uuid = kwargs.get("apt_uuid")
+            queryset = self.get_queryset(apt_uuid=apt_uuid)
 
-        # page = self.paginate_queryset(queryset)
+            # page = self.paginate_queryset(queryset)
 
-        if len(queryset) != 0:
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+            if len(queryset) != 0:
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        except ValidationError:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data={"uuid": "Invalid UUID"}
+            )
 
 
 # Like & unlike an apartment

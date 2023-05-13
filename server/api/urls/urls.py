@@ -38,12 +38,12 @@ urlpatterns = [
     path("email_exists/", email_exists, name="email_exists"),
     path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
     path(
-        "apartments/<int:apt_id>/photos/",
+        "apartments/<str:apt_uuid>/photos/",
         ApartmentPhotoViewSet.as_view({"post": "create", "get": "list"}),
         name="apartment_photos_create",
     ),
     path(
-        "apartments/<int:apt_id>/photos/<int:photo_id>",
+        "apartments/<str:apt_uuid>/photos/<int:photo_id>",
         ApartmentPhotoViewSet.as_view({"delete": "destroy"}),
         name="apartment_photo_delete",
     ),
