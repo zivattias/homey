@@ -8,10 +8,12 @@ import boto3
 
 
 @api_view(["POST"])
-def get_s3_presigned_URL(request, content_type):
+def get_s3_presigned_URL(request, destination, content_type):
+    if destination not in ["profile_pics", "apartment_pics"]:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     user = request.user
     if user.is_authenticated:
-        object_key = f"profile_pics/{str(uuid4())}.{content_type}"
+        object_key = f"{destination}/{str(uuid4())}.{content_type}"
         try:
             presigned_url = boto3.client(
                 "s3",

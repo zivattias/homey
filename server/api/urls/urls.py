@@ -61,8 +61,8 @@ urlpatterns = [
         name="update_user_profile_picture",
     ),
     path(
-        "upload_profile_pic/<str:content_type>/",
+        "upload_pic/<str:destination>/<str:content_type>/",
         get_s3_presigned_URL,
-        name="upload_profile_pic",
+        name="upload_pic",
     ),
 ] + router.urls
