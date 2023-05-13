@@ -77,57 +77,59 @@ const FourthStage = ({
           const imageBlob = await fetch(image.src).then((response) =>
             response.blob()
           );
-          const presignedURL = await sendRequest(
-            "post",
-            FULL_API_ENDPOINT +
-              API_ENDPOINTS.UPLOAD_PIC +
-              `apartment_pics/${imageBlob.type.split("/")[1]}/`,
-            user.accessToken!,
-            {}
-          );
-          if (presignedURL.data) {
-            const { url } = presignedURL.data;
-            const { key, AWSAccessKeyId, policy, signature } =
-              presignedURL.data.fields;
+          setTimeout(async () => {
+            const presignedURL = await sendRequest(
+              "post",
+              FULL_API_ENDPOINT +
+                API_ENDPOINTS.UPLOAD_PIC +
+                `apartment_pics/${imageBlob.type.split("/")[1]}/`,
+              user.accessToken!,
+              {}
+            );
+            if (presignedURL.data) {
+              const { url } = presignedURL.data;
+              const { key, AWSAccessKeyId, policy, signature } =
+                presignedURL.data.fields;
 
-            const fields = [
-              { name: "key", value: key },
-              { name: "AWSAccessKeyId", value: AWSAccessKeyId },
-              { name: "policy", value: policy },
-              { name: "signature", value: signature },
-              { name: "file", value: imageBlob, filename: key.split("/")[1] },
-            ];
+              const fields = [
+                { name: "key", value: key },
+                { name: "AWSAccessKeyId", value: AWSAccessKeyId },
+                { name: "policy", value: policy },
+                { name: "signature", value: signature },
+                { name: "file", value: imageBlob, filename: key.split("/")[1] },
+              ];
 
-            const formData = new FormData();
-            fields.forEach((field) => {
-              field.name == "file"
-                ? formData.append(field.name, field.value, field.filename)
-                : formData.append(field.name, field.value);
-            });
-            // Upload image to S3 using presignedURL (=url)
-            const S3Response = await axios.post(url, formData);
-            if (S3Response.status == 204) {
-              // Upload apartment photos (uploaded URLs) to DB, for apt_uuid.
-              const response = await sendRequest(
-                "post",
-                FULL_API_ENDPOINT +
-                  API_ENDPOINTS.APARTMENTS.BASE +
-                  `${apt_uuid}/photos/`,
-                user.accessToken!,
-                {
-                  photo_url: url + key,
+              const formData = new FormData();
+              fields.forEach((field) => {
+                field.name == "file"
+                  ? formData.append(field.name, field.value, field.filename)
+                  : formData.append(field.name, field.value);
+              });
+              // Upload image to S3 using presignedURL (=url)
+              const S3Response = await axios.post(url, formData);
+              if (S3Response.status == 204) {
+                // Upload apartment photos (uploaded URLs) to DB, for apt_uuid.
+                const response = await sendRequest(
+                  "post",
+                  FULL_API_ENDPOINT +
+                    API_ENDPOINTS.APARTMENTS.BASE +
+                    `${apt_uuid}/photos/`,
+                  user.accessToken!,
+                  {
+                    photo_url: url + key,
+                  }
+                );
+                if (response.status == 201) {
+                  alert.show(`Uploaded image #${index + 1}`, {
+                    type: "success",
+                  });
+                  setImagesUploaded((number) => number + 1);
                 }
-              );
-              if (response.status == 201) {
-                alert.show(`Uploaded image #${index + 1}`, {
-                  type: "success",
-                });
-                setImagesUploaded((number) => number + 1);
+              } else {
+                console.log(S3Response);
               }
-            } else {
-              console.log(S3Response);
             }
-          }
+          }, 10);
         });
       } else {
         throw new Error("Failed uploading apartment");
