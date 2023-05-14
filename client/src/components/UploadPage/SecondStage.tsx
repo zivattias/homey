@@ -20,7 +20,7 @@ const SecondStage = ({
   handleStages: (event: React.FormEvent, stage: number) => void;
 }) => {
   const IMAGE_KEY_LIST = [0, 1, 2, 3, 4];
-  const MIN_REQUIRED_IMAGES = 5;
+  const MIN_REQUIRED_IMAGES = 3;
   const images = useImages();
 
   return (
@@ -49,8 +49,8 @@ const SecondStage = ({
             Let's add some photos to your apartment.
           </Typography>
           <Typography>
-            Upload at least {MIN_REQUIRED_IMAGES - 2} photos. Photos are vital
-            for the success of your housing listing.
+            Upload at least {MIN_REQUIRED_IMAGES} photos. Photos are vital for
+            the success of your housing listing.
           </Typography>
           <Box
             component="form"
@@ -77,7 +77,7 @@ const SecondStage = ({
             </Grid>
             <Divider sx={{ width: "100%", my: "1em" }}></Divider>
             <Button
-              disabled={!(images.length >= MIN_REQUIRED_IMAGES - 2)}
+              disabled={!(images.length >= MIN_REQUIRED_IMAGES)}
               sx={{ mx: "auto", width: "50%" }}
               variant="contained"
               type="submit"

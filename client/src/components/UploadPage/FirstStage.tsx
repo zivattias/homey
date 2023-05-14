@@ -47,7 +47,18 @@ const FirstStage = ({
         }}
       >
         <Stack gap={2}>
-          <Typography component="h1" variant="h5">
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{
+              backgroundImage: `linear-gradient(135deg, ${
+                theme.palette.mode == "dark" ? "white" : "black"
+              }, grey 70%)`,
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: "bold",
+            }}
+          >
             Add your apartment in just a few clicks!
           </Typography>
           <Typography>

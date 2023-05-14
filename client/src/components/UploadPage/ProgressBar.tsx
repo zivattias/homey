@@ -19,7 +19,7 @@ export default function ProgressBar(
       }}
     >
       <Box sx={{ marginBottom: 1 }}>
-        <Typography variant="body2" color="inherit">
+        <Typography fontWeight="bold" variant="body2" color="inherit">
           {`${Math.round(props.value)}%`}
         </Typography>
       </Box>
@@ -27,7 +27,15 @@ export default function ProgressBar(
         <LinearProgress
           variant="determinate"
           {...props}
-          sx={{ borderRadius: "20px" }}
+          sx={{
+            background: "lightgrey",
+            borderRadius: "20px",
+            ".MuiLinearProgress-bar": {
+              background: `linear-gradient(90deg, #6fcbb6 ${
+                100 - props.value
+              }%, #9c64f4 100%)`,
+            },
+          }}
         />
       </Box>
     </Box>
