@@ -108,7 +108,14 @@ export default function ProfileField({
                 style={{
                   backgroundColor:
                     theme.palette.mode == "dark" ? "#141414" : "",
-                  color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+                  color:
+                    theme.palette.mode == "dark"
+                      ? "rgba(255, 255, 255, 0.9)"
+                      : "black",
+                  border: `1px solid rgba(${
+                    theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+                  }, 0.2)`,
+                  borderRight: "none",
                 }}
                 className="input-group-text"
                 id={`${label.replaceAll(" ", "-")}`}
@@ -119,17 +126,23 @@ export default function ProfileField({
             <input
               onBlur={() => validateEmail()}
               style={{
-                backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-                color: theme.palette.mode == "dark" ? "#fafafa" : "black",
+                backgroundColor: theme.palette.mode == "dark" ? "#202020" : "",
+                color:
+                  theme.palette.mode == "dark"
+                    ? "rgba(255, 255, 255, .9)"
+                    : "black",
+                border: `1px solid rgba(${
+                  theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+                }, 0.2)`,
               }}
               type="text"
               className="form-control"
               value={fieldValue}
               onChange={(event) => {
+                setFieldValue(event.target.value);
                 if (target == "email") {
                   setIsChanged(true);
                 }
-                setFieldValue(event.target.value);
               }}
             />
             <div className="input-group-append">
@@ -182,7 +195,7 @@ export default function ProfileField({
             emailExistsTest !== null &&
             isEmailValid ? (
             <Typography sx={{ color: "#55A630", fontSize: ".9em" }}>
-              Email is available!
+              Email is available! Tap anywhere outside the field.
             </Typography>
           ) : !isEmailValid ? (
             <Typography sx={{ color: "#8B0000", fontSize: ".9em" }}>

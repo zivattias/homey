@@ -74,7 +74,14 @@ const PasswordField = () => {
             <span
               style={{
                 backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
-                color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+                color:
+                  theme.palette.mode == "dark"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "black",
+                border: `1px solid rgba(${
+                  theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+                }, 0.2)`,
+                borderRight: "none",
               }}
               className="input-group-text"
               id="basic-addon1"
@@ -85,8 +92,14 @@ const PasswordField = () => {
           <input
             disabled={loading}
             style={{
-              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
+              backgroundColor: theme.palette.mode == "dark" ? "#202020" : "",
+              color:
+                theme.palette.mode == "dark"
+                  ? "rgba(255, 255, 255, .9)"
+                  : "black",
+              border: `1px solid rgba(${
+                theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+              }, 0.2)`,
             }}
             type="password"
             className="form-control"
@@ -110,19 +123,32 @@ const PasswordField = () => {
             <span
               style={{
                 backgroundColor: theme.palette.mode == "dark" ? "#141414" : "",
-                color: theme.palette.mode == "dark" ? "#fefefe" : "black",
+                color:
+                  theme.palette.mode == "dark"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "black",
+                border: `1px solid rgba(${
+                  theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+                }, 0.2)`,
+                borderRight: "none",
               }}
               className="input-group-text"
               id="basic-addon1"
             >
-              Confirm Password
+              Confirm
             </span>
           </div>
           <input
             disabled={loading}
             style={{
-              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
+              backgroundColor: theme.palette.mode == "dark" ? "#202020" : "",
+              color:
+                theme.palette.mode == "dark"
+                  ? "rgba(255, 255, 255, .9)"
+                  : "black",
+              border: `1px solid rgba(${
+                theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+              }, 0.2)`,
             }}
             type="password"
             className="form-control"
@@ -142,15 +168,25 @@ const PasswordField = () => {
           </Typography>
         )}
       </Box>
-      <LoadingButton
-        type="submit"
-        sx={{ width: { xs: "60%", sm: "40%", md: "30%" } }}
-        variant="contained"
-        disabled={!suiteResult.isValid()}
-        loading={loading}
+      <Box
+        sx={{
+          display: { xs: "flex", md: "block" },
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        Change Password
-      </LoadingButton>
+        <LoadingButton
+          type="submit"
+          sx={{
+            width: { xs: "60%", sm: "40%", md: "30%" },
+          }}
+          variant="contained"
+          disabled={!suiteResult.isValid()}
+          loading={loading}
+        >
+          Change Password
+        </LoadingButton>
+      </Box>
     </Box>
   );
 };

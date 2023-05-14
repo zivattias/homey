@@ -88,6 +88,9 @@ function PictureField({
       <div className="input-group">
         <div className="custom-file">
           <input
+            style={{
+              cursor: "pointer",
+            }}
             type="file"
             accept="image/png, image/jpeg, image/jpg"
             size={5000000} // Image size limit: 5MB
@@ -96,9 +99,15 @@ function PictureField({
           />
           <label
             style={{
+              border: `1px solid rgba(${
+                theme.palette.mode == "dark" ? "255, 255, 255" : "0, 0, 0"
+              }, 0.2)`,
               overflow: "hidden",
-              backgroundColor: theme.palette.mode == "dark" ? "black" : "",
-              color: theme.palette.mode == "dark" ? "#fafafa" : "black",
+              backgroundColor: theme.palette.mode == "dark" ? "#202020" : "",
+              color:
+                theme.palette.mode == "dark"
+                  ? "rgba(255, 255, 255, .9)"
+                  : "black",
             }}
             className="custom-file-label"
           >
