@@ -8,6 +8,7 @@ import {
   Divider,
   CardActions,
   Box,
+  Avatar,
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import ApartmentImage from "../DashboardPage/Apartments/ApartmentImage";
@@ -52,6 +53,7 @@ export interface FeedListingProps {
   duration: number;
   is_active: boolean;
   user_id: number;
+  user_photo: string;
 }
 
 const likeIconStyles = {
@@ -66,6 +68,7 @@ const likeIconStyles = {
 const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
   const user = useUser();
   const dispatch = useUserDispatch();
+  const alert = useAlert();
 
   const [isLiked, setIsLiked] = React.useState<boolean>(false);
   const [totalLikes, setTotalLikes] = React.useState<number>(
@@ -130,7 +133,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
   return (
     <Card
       sx={{
-        maxWidth: "100%",
+        width: "100%",
         minHeight: { sm: "570px", md: "570px" },
         position: "relative",
       }}
@@ -155,37 +158,70 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
             justifyContent: "space-between",
           }}
         >
-          <Typography gutterBottom variant="h6" component="div">
-            {`${listing.title} • ${parseInt(listing.price).toLocaleString()}₪`}
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography pr={2} gutterBottom variant="h6" component="div">
+              {`${listing.title} • ${parseInt(
+                listing.price
+              ).toLocaleString()}₪`}
+            </Typography>
+            {user.id !== listing.user_id &&
+              (isLiked ? (
+                <FavoriteIcon
+                  fontSize="large"
+                  color="error"
+                  sx={{ ...likeIconStyles }}
+                  onClick={() => handleLike()}
+                />
+              ) : (
+                <FavoriteBorderIcon
+                  color="error"
+                  sx={{ ...likeIconStyles }}
+                  onClick={() => {
+                    if (!user.accessToken) {
+                      alert.show("Please log in first", { type: "info" });
+                    } else {
+                      handleLike();
+                    }
+                  }}
+                />
+              ))}
+          </Box>
           <Typography>{listing.description}</Typography>
         </Box>
         <Divider sx={{ mb: 2, mt: 1 }}></Divider>
-        <Typography mb="0.7em" variant="body2">
-          <span style={{ fontWeight: "bold" }}>Added by:</span>{" "}
-          {listing.user_id == user.id ? "You" : listing.full_name}
-        </Typography>
-        <Typography mb="0.7em" variant="body2">
-          <span style={{ fontWeight: "bold" }}>Liked by:</span>{" "}
-          {`${totalLikes} user(s)`}
-        </Typography>
-        <Typography mb="0.7em" variant="body2">
-          <span style={{ fontWeight: "bold" }}>Added at:</span>{" "}
-          {new Date(listing.created).toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </Typography>
-        {icons.length >= 1 && (
-          <>
-            <Typography fontWeight="bold" mb="0.4em" variant="body2">
-              Attributes:
-            </Typography>
-            {icons}
-          </>
-        )}
+        <Box sx={{ position: "relative" }}>
+          <Avatar
+            sx={{ position: "absolute", right: "0" }}
+            src={listing.user_photo}
+          >
+            {listing.full_name.split(" ")[0][0]}
+          </Avatar>
+          <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>Added by:</span>{" "}
+            {listing.user_id == user.id ? "You" : listing.full_name}
+          </Typography>
+          <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>Liked by:</span>{" "}
+            {`${totalLikes} user(s)`}
+          </Typography>
+          <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>Added on:</span>{" "}
+            {new Date(listing.created).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </Typography>
+          {icons.length >= 1 && (
+            <>
+              <Typography fontWeight="bold" mb="0.4em" variant="body2">
+                Attributes:
+              </Typography>
+              {icons}
+            </>
+          )}
+        </Box>
       </CardContent>
       <CardActions sx={{ p: 2, bottom: "0", position: { sm: "absolute" } }}>
         {/* <Button
@@ -196,21 +232,6 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
         >
           Delete
         </Button> */}
-        {user.id !== listing.user_id &&
-          (isLiked ? (
-            <FavoriteIcon
-              fontSize="large"
-              color="error"
-              sx={{ ...likeIconStyles }}
-              onClick={() => handleLike()}
-            />
-          ) : (
-            <FavoriteBorderIcon
-              color="error"
-              sx={{ ...likeIconStyles }}
-              onClick={() => handleLike()}
-            />
-          ))}
       </CardActions>
     </Card>
   );

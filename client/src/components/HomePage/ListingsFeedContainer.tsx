@@ -13,7 +13,7 @@ const ListingsFeedContainer = ({
         <Grid container>
           {listings.map((listing) => {
             return (
-              <Grid key={listing.id} p={2} item xs={12} sm={6} md={6}>
+              <Grid key={listing.id} p={2} item xs={12} sm={6} md={4}>
                 <ListingFeedCard listing={listing} key={listing.id} />
               </Grid>
             );

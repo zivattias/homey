@@ -1,5 +1,5 @@
 from .ApartmentSerializer import BasicApartmentSerializer
-from ..models import ApartmentPhoto, Listing
+from ..models import ApartmentPhoto, Listing, UserProfile
 from rest_framework import serializers
 
 
@@ -8,6 +8,11 @@ class GetListingSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
     user_id = serializers.SerializerMethodField()
+    user_photo = serializers.SerializerMethodField()
+
+    def get_user_photo(self, obj: Listing):
+        user_profile = UserProfile.objects.get(user__id=obj.apt.user.id)
+        return user_profile.profile_pic
 
     def get_user_id(self, obj: Listing):
         user = obj.apt.user

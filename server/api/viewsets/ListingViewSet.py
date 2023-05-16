@@ -17,9 +17,13 @@ from ..models import Listing
 # Listing viewset: CRUD
 class ListingViewSet(viewsets.ModelViewSet):
     serializer_class = CreateListingSerializer
-    permission_classes = [permissions.IsAuthenticated, ListingPermissions]
     authentication_classes = [JWTAuthentication]
     queryset = Listing.objects.filter(is_active=True)
+
+    def get_permissions(self):
+        if self.request.method != "GET":
+            return [permissions.IsAuthenticated(), ListingPermissions()]
+        return super().get_permissions()
 
     def get_serializer_class(self):
         if self.request.method in ("PUT", "PATCH"):

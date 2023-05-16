@@ -6,6 +6,7 @@ import sendRequest from "../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
 import { useAlert } from "react-alert";
 import ListingsFeedContainer from "../components/HomePage/ListingsFeedContainer";
+import axios from "axios";
 
 // Homepage components:
 // Hero:
@@ -20,11 +21,8 @@ export default function HomePage() {
 
   const fetchFeedListings = async () => {
     try {
-      const response = await sendRequest(
-        "get",
-        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS,
-        user.accessToken!,
-        {}
+      const response = await axios.get(
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS
       );
       if (response.status == 200) {
         setListings(response.data);
@@ -37,10 +35,8 @@ export default function HomePage() {
   };
 
   React.useEffect(() => {
-    if (user.accessToken) {
-      fetchFeedListings();
-    }
-  }, [user.accessToken]);
+    fetchFeedListings();
+  }, []);
 
   return (
     <>

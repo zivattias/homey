@@ -6,6 +6,13 @@ import os
 import json
 import boto3
 
+boto3_client = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+    region_name=os.getenv("AWS_REGION_NAME"),
+)
+
 
 @api_view(["POST"])
 def get_s3_presigned_URL(request, destination, content_type):
@@ -16,21 +23,10 @@ def get_s3_presigned_URL(request, destination, content_type):
         uuid = str(uuid4())
         print(uuid)
         object_key = f"{destination}/{uuid}.{content_type}"
-        try:
-            presigned_url = boto3.client(
-                "s3",
-                aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
-                aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
-                region_name=os.getenv("AWS_REGION_NAME"),
-            ).generate_presigned_post(
-                os.getenv("AWS_BUCKET_NAME"),
-                object_key,
-                ExpiresIn=3600,
-            )
-            return Response(status=status.HTTP_201_CREATED, data=presigned_url)
-        except Exception as e:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"Exception": f"{e.__repr__} f{e.__str__}"},
-            )
+        presigned_url = boto3_client.generate_presigned_post(
+            os.getenv("AWS_BUCKET_NAME"),
+            object_key,
+            ExpiresIn=3600,
+        )
+        return Response(status=status.HTTP_201_CREATED, data=presigned_url)
     return Response(status=status.HTTP_401_UNAUTHORIZED)

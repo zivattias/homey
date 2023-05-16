@@ -46,7 +46,7 @@ const DashboardPage = () => {
   React.useEffect(() => {
     setLoading(true);
     fetchApartments();
-  }, [apartments.length, isListingModified == true]);
+  }, [isListingModified]);
 
   return !accessToken ? (
     <Navigate to="/" />
