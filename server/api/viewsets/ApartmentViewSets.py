@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from ..models import Apartment, ApartmentPhoto, LikedApartments
+from ..models import Apartment, ApartmentPhoto, LikedApartments, Listing
 from ..permissions.ApartmentPermissions import (
     ApartmentPermissions,
     ApartmentPhotoPermissions,
@@ -30,7 +30,7 @@ class ApartmentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
             return Apartment.objects.all()
-        return self.queryset
+        return self.queryset.filter(user__id=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -45,6 +45,12 @@ class ApartmentViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
+        related_listings = Listing.objects.filter(apt__id=instance.id)
+
+        for listing in related_listings:
+            listing.set_active(False)
+            listing.save()
+
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -142,7 +148,7 @@ def like_apartment(request, apt_id):
                 {
                     "message": f"Apartment {apartment.id} liked by {user.first_name} {user.last_name}"
                 },
-                status=status.HTTP_200_OK,
+                status=status.HTTP_201_CREATED,
             )
 
         if request.method == "DELETE":
@@ -155,7 +161,7 @@ def like_apartment(request, apt_id):
                 )
             like.delete()
             return Response(
-                status=status.HTTP_201_CREATED,
+                status=status.HTTP_204_NO_CONTENT,
             )
     return Response(
         {"authentication": "Must be authenticated to perform this action"},

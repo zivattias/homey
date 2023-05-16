@@ -1,14 +1,14 @@
-from django.db import models
-from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.validators import (
-    RegexValidator,
+    MaxValueValidator,
     MinLengthValidator,
     MinValueValidator,
-    MaxValueValidator,
+    RegexValidator,
 )
-from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Q
 from django_extensions.db.models import TimeStampedModel
+from rest_framework import serializers
 
 from .utils.consts import IL_ZIPCODE_REGEX
 
@@ -125,9 +125,12 @@ class Listing(TimeStampedModel, models.Model):
             & Q(to_date__gte=self.from_date)
             & ~Q(id=self.id),
             apt=self.apt,
+            is_active=True,
         )
         if overlapping_listings.exists():
-            raise ValidationError("The listing dates overlap with an existing listing.")
+            raise serializers.ValidationError(
+                "The listing dates overlap with an existing listing."
+            )
         super().save(*args, **kwargs)
 
 
@@ -204,9 +207,7 @@ class LikedApartments(models.Model):
 
 
 class ApartmentPhoto(models.Model):
-    apt = models.ForeignKey(
-        Apartment, on_delete=models.CASCADE, related_name="photos"
-    )
+    apt = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name="photos")
     photo_url = models.URLField()
 
     class Meta:

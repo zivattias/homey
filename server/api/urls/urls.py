@@ -9,7 +9,7 @@ from ..viewsets.ApartmentViewSets import (
 )
 from ..viewsets.GetS3PresignedURL import get_s3_presigned_URL
 from ..viewsets.JWTViewSets import BlacklistView, RegistrationView
-from ..viewsets.ListingViewSet import ListingViewSet, activate_listing
+from ..viewsets.ListingViewSet import ListingViewSet, change_listing_status
 from ..viewsets.ProposalViewSet import ProposalViewSet
 from ..viewsets.ReviewViewSet import ReviewViewSet
 from ..viewsets.UserViewSets import (
@@ -36,7 +36,7 @@ urlpatterns = [
     path("me/", UserProfileView, name="profile"),
     path("user_exists/", user_exists, name="user_exists"),
     path("email_exists/", email_exists, name="email_exists"),
-    path("apartments/like/<int:apt_id>/", like_apartment, name="like_apartment"),
+    path("apartments/<int:apt_id>/like/", like_apartment, name="like_apartment"),
     path(
         "apartments/<str:apt_uuid>/photos/",
         ApartmentPhotoViewSet.as_view({"post": "create", "get": "list"}),
@@ -48,7 +48,9 @@ urlpatterns = [
         name="apartment_photo_delete",
     ),
     path(
-        "listings/activate/<int:listing_id>/", activate_listing, name="activate_listing"
+        "listings/<int:listing_id>/status/",
+        change_listing_status,
+        name="change_listing_status",
     ),
     path(
         "users/<int:user_id>/",
