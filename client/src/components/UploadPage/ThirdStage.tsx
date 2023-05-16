@@ -67,7 +67,6 @@ function ThirdStage({
       { ...snakeCaseApartmentAttributes }
     );
     if (response.status === 201) {
-      console.log(response.data);
       dispatch({
         type: ADD_APARTMENT_ACTIONS.RESET_FORM,
         payload: {},
@@ -75,7 +74,6 @@ function ThirdStage({
       setCreated(true);
     }
     setLoading(false);
-    console.log(images);
 
     const updatedCheckboxes = [...checkboxes];
     updatedCheckboxes.forEach((checkbox) => (checkbox.value = false));

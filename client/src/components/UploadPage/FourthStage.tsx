@@ -75,8 +75,8 @@ const FourthStage = ({
         console.log(`apt_uuid: ${apt_uuid}`);
         // Generate n presignedURLs for n images.
         images.forEach(async (image, index) => {
-          const imageBlob = await fetch(image.src).then((response) =>
-            response.blob()
+          const imageBlob = await fetch(image.src).then(
+            async (response) => await response.blob()
           );
           const presignedURL = await sendRequest(
             "post",
@@ -125,9 +125,15 @@ const FourthStage = ({
                   type: "success",
                 });
                 setImagesUploaded((number) => number + 1);
+              } else {
+                alert.show(`Failed uploading image #${index + 1}`, {
+                  type: "error",
+                });
+                setImagesUploaded((number) => number + 1);
               }
             } else {
-              console.log(S3Response);
+              console.log(`S3 response: `, S3Response);
+              setImagesUploaded((number) => number + 1);
             }
           }
         });
