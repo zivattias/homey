@@ -75,6 +75,7 @@ export default function AuthModal({
             lastName: userData.data.last_name,
             isStaff: userData.data.is_staff,
             profilePic: userData.data.profile_pic,
+            likedApartments: userData.data.liked_apartments,
             ...userData.data,
           },
         });

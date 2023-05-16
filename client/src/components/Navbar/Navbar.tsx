@@ -53,6 +53,10 @@ function Navbar() {
       navigate("/account");
       handleCloseUserMenu();
     },
+    Dashboard: () => {
+      navigate("/dashboard");
+      handleCloseUserMenu();
+    },
   };
 
   const theme = useTheme();

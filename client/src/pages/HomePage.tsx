@@ -1,5 +1,11 @@
 import React from "react";
 import Hero from "../components/Hero";
+import { FeedListingProps } from "../components/HomePage/ListingFeedCard";
+import { useUser } from "../context/UserContext";
+import sendRequest from "../utils/funcs/sendRequest";
+import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
+import { useAlert } from "react-alert";
+import ListingsFeedContainer from "../components/HomePage/ListingsFeedContainer";
 
 // Homepage components:
 // Hero:
@@ -8,5 +14,38 @@ import Hero from "../components/Hero";
 // - Search component: by neighborhood, zipcode, more(?)
 
 export default function HomePage() {
-    return <Hero></Hero>;
+  const [listings, setListings] = React.useState<FeedListingProps[]>([]);
+  const user = useUser();
+  const alert = useAlert();
+
+  const fetchFeedListings = async () => {
+    try {
+      const response = await sendRequest(
+        "get",
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS,
+        user.accessToken!,
+        {}
+      );
+      if (response.status == 200) {
+        setListings(response.data);
+      }
+    } catch (error: any) {
+      alert.show("Failed getting listings, please refresh or try later", {
+        type: "error",
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    if (user.accessToken) {
+      fetchFeedListings();
+    }
+  }, [user.accessToken]);
+
+  return (
+    <>
+      <Hero></Hero>
+      <ListingsFeedContainer listings={listings} />
+    </>
+  );
 }

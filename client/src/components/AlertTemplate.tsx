@@ -1,4 +1,4 @@
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import CloseIcon from "@mui/icons-material/Close";
@@ -65,7 +65,7 @@ const AlertTemplate = ({
           justifyContent: "center",
         }}
       >
-        {options.type === "info" && <QuestionMarkIcon />}
+        {options.type === "info" && <PriorityHighIcon />}
         {options.type === "success" && <CheckCircleIcon />}
         {options.type === "error" && <ErrorIcon />}
       </Box>

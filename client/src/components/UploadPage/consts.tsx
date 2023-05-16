@@ -6,50 +6,50 @@ import BalconyIcon from "@mui/icons-material/Balcony";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 
 const checkboxStyle = {
-    mr: "0.5em",
+  mr: "0.5em",
 };
 const checkboxesData: {
-    id: string;
-    label: string;
-    key: keyof Apartment;
-    value: boolean;
-    icon: JSX.Element;
+  id: string;
+  label: string;
+  key: keyof Apartment;
+  value: boolean;
+  icon: JSX.Element;
 }[] = [
-    {
-        id: "pet_friendly",
-        label: "Pet friendly?",
-        key: "petFriendly",
-        value: false,
-        icon: <PetsIcon sx={{ ...checkboxStyle }} />,
-    },
-    {
-        id: "smoke_friendly",
-        label: "Smoke friendly?",
-        key: "smokeFriendly",
-        value: false,
-        icon: <SmokingRoomsIcon sx={{ ...checkboxStyle }} />,
-    },
-    {
-        id: "is_wifi",
-        label: "Is there WiFi?",
-        key: "isWifi",
-        value: false,
-        icon: <WifiIcon sx={{ ...checkboxStyle }} />,
-    },
-    {
-        id: "is_balcony",
-        label: "Is there a balcony?",
-        key: "isBalcony",
-        value: false,
-        icon: <BalconyIcon sx={{ ...checkboxStyle }} />,
-    },
-    {
-        id: "is_parking",
-        label: "Is there private parking?",
-        key: "isParking",
-        value: false,
-        icon: <LocalParkingIcon sx={{ ...checkboxStyle }} />,
-    },
+  {
+    id: "pet_friendly",
+    label: "Pet friendly?",
+    key: "petFriendly",
+    value: false,
+    icon: <PetsIcon key={"petFriendly"} sx={{ ...checkboxStyle }} />,
+  },
+  {
+    id: "smoke_friendly",
+    label: "Smoke friendly?",
+    key: "smokeFriendly",
+    value: false,
+    icon: <SmokingRoomsIcon key={"smokeFriendly"} sx={{ ...checkboxStyle }} />,
+  },
+  {
+    id: "is_wifi",
+    label: "Is there WiFi?",
+    key: "isWifi",
+    value: false,
+    icon: <WifiIcon key="isWifi" sx={{ ...checkboxStyle }} />,
+  },
+  {
+    id: "is_balcony",
+    label: "Is there a balcony?",
+    key: "isBalcony",
+    value: false,
+    icon: <BalconyIcon key="isBalcony" sx={{ ...checkboxStyle }} />,
+  },
+  {
+    id: "is_parking",
+    label: "Is there private parking?",
+    key: "isParking",
+    value: false,
+    icon: <LocalParkingIcon key="isParking" sx={{ ...checkboxStyle }} />,
+  },
 ];
 
 export default checkboxesData;

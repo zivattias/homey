@@ -25,8 +25,11 @@ function ProfilePage() {
   ) : (
     <>
       <Container sx={{ marginY: 5 }}>
-        <Typography variant="h5" fontWeight={600}>
+        <Typography mb="0.5em" variant="h5" fontWeight={600}>
           Profile Settings
+        </Typography>
+        <Typography variant="body2" fontWeight={400}>
+          {`(User #${user.id})`}
         </Typography>
       </Container>
       <Divider />

@@ -14,6 +14,7 @@ import UploadPage from "./pages/UploadPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAlert } from "react-alert";
 import AccountPage from "./pages/AccountPage";
+import DashboardPage from "./pages/DashboardPage";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -23,9 +24,8 @@ function App() {
   const alert = useAlert();
   const dispatch = useUserDispatch();
   const user = useUser();
+  const [refreshToken] = useLocalStorage("refreshToken", "");
   console.log(user);
-  const [refreshToken, _] = useLocalStorage("refreshToken", "");
-
   React.useEffect(() => {
     const getAccessToken = async () => {
       try {
@@ -52,6 +52,7 @@ function App() {
                 lastName: response.data.last_name,
                 isStaff: response.data.is_staff,
                 profilePic: response.data.profile_pic,
+                likedApartments: response.data.liked_apartments,
                 ...response.data,
               },
             });
@@ -101,6 +102,7 @@ function App() {
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
