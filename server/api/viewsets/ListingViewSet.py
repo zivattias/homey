@@ -3,6 +3,8 @@ from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from ..serializers.GetListingSerializer import GetListingSerializer
+
 from ..permissions.ListingPermissions import ListingPermissions
 
 from ..serializers.ListingSerializer import (
@@ -22,11 +24,29 @@ class ListingViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method in ("PUT", "PATCH"):
             return UpdateListingSerializer
+        elif self.request.method == "GET":
+            return GetListingSerializer
         return super().get_serializer_class()
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     def get_queryset(self):
-        if self.request.user.is_staff:
-            return Listing.objects.all()
+        if self.request.method == "GET":
+            return (
+                Listing.objects.all()
+                if self.request.user.is_staff
+                else Listing.objects.filter(is_active=True)
+            )
+
         return Listing.objects.filter(
             apt__user__id=self.request.user.id, is_active=True
         )
@@ -50,7 +70,7 @@ class ListingViewSet(viewsets.ModelViewSet):
 
 # Activate/deactivate a Listing
 @api_view(["PUT", "DELETE"])
-def activate_listing(request, listing_id):
+def change_listing_status(request, listing_id):
     try:
         listing = Listing.objects.get(id=listing_id)
     except Listing.DoesNotExist:
