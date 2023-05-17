@@ -84,6 +84,8 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     .map((item) => item.icon);
 
   const handleLike = async () => {
+    setTotalLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1));
+    setIsLiked(!isLiked);
     const requestMethod = isLiked ? "delete" : "put";
     try {
       const response = await sendRequest(
@@ -101,8 +103,6 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
             likedApartments: [...user.likedApartments!, listing.apt.id],
           },
         });
-        setIsLiked(!isLiked);
-        setTotalLikes((prevLikes) => prevLikes + 1);
       } else if (response.status == 204) {
         dispatch({
           type: USER_ACTIONS.UPDATE_FIELD,
@@ -113,7 +113,6 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           },
         });
         setIsLiked(!isLiked);
-        setTotalLikes((prevLikes) => prevLikes - 1);
       }
     } catch (error: any) {
       if (error instanceof AxiosError) {
@@ -123,18 +122,21 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
   };
 
   React.useEffect(() => {
+    if (!user.accessToken) {
+      setIsLiked(false);
+    }
     if (user.likedApartments) {
       if (user.likedApartments.includes(listing.apt.id)) {
         setIsLiked(true);
       }
     }
-  }, [user.likedApartments]);
+  }, [user.likedApartments, user.accessToken]);
 
   return (
     <Card
       sx={{
         width: "100%",
-        minHeight: { sm: "570px", md: "570px" },
+        minHeight: { sm: "600px", md: "650px", lg: "600px" },
         position: "relative",
       }}
     >
@@ -197,12 +199,16 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
             {listing.full_name.split(" ")[0][0]}
           </Avatar>
           <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>Duration:</span>{" "}
+            {`${listing.duration} day(s)`}
+          </Typography>
+          <Typography mb="0.7em" variant="body2">
             <span style={{ fontWeight: "bold" }}>Added by:</span>{" "}
             {listing.user_id == user.id ? "You" : listing.full_name}
           </Typography>
           <Typography mb="0.7em" variant="body2">
             <span style={{ fontWeight: "bold" }}>Liked by:</span>{" "}
-            {`${totalLikes} user(s)`}
+            {`${totalLikes} ${totalLikes == 1 ? "user" : "users"}`}
           </Typography>
           <Typography mb="0.7em" variant="body2">
             <span style={{ fontWeight: "bold" }}>Added on:</span>{" "}
