@@ -1,10 +1,8 @@
 import React from "react";
-import { ListingProps } from "../DashboardPage/Listings/ListingsContainer";
 import {
   Card,
   CardContent,
   Typography,
-  Chip,
   Divider,
   CardActions,
   Box,
@@ -21,7 +19,6 @@ import {
   useUserDispatch,
 } from "../../context/UserContext";
 import sendRequest from "../../utils/funcs/sendRequest";
-import { request } from "http";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { AxiosError } from "axios";
 import { useAlert } from "react-alert";
@@ -39,10 +36,11 @@ export interface FeedListingProps {
     is_balcony: boolean;
     is_parking: boolean;
     is_deleted: boolean;
-    liked_by_users: number[];
   };
   photos: string[];
   full_name: string;
+  user_id: number;
+  user_photo: string;
   created: string;
   modified: string;
   title: string;
@@ -52,8 +50,7 @@ export interface FeedListingProps {
   to_date: string;
   duration: number;
   is_active: boolean;
-  user_id: number;
-  user_photo: string;
+  liked_by_users: number[];
 }
 
 const likeIconStyles = {
@@ -72,7 +69,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
 
   const [isLiked, setIsLiked] = React.useState<boolean>(false);
   const [totalLikes, setTotalLikes] = React.useState<number>(
-    listing.apt.liked_by_users.length
+    listing.liked_by_users.length
   );
   const listingPhotos = listing.photos;
   const attributes = Object.entries(listing.apt)
@@ -90,9 +87,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     try {
       const response = await sendRequest(
         requestMethod,
-        FULL_API_ENDPOINT +
-          API_ENDPOINTS.APARTMENTS.BASE +
-          `${listing.apt.id}/like/`,
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS.BASE + `${listing.id}/like/`,
         user.accessToken!,
         {}
       );
@@ -100,24 +95,25 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
         dispatch({
           type: USER_ACTIONS.UPDATE_FIELD,
           payload: {
-            likedApartments: [...user.likedApartments!, listing.apt.id],
+            likedListings: [...user.likedListings!, listing.id],
           },
         });
       } else if (response.status == 204) {
         dispatch({
           type: USER_ACTIONS.UPDATE_FIELD,
           payload: {
-            likedApartments: user.likedApartments!.filter(
-              (apartment) => apartment !== listing.apt.id
+            likedListings: user.likedListings!.filter(
+              (listingId) => listingId !== listing.id
             ),
           },
         });
-        setIsLiked(!isLiked);
       }
     } catch (error: any) {
       if (error instanceof AxiosError) {
         console.log(error.response?.data);
       }
+      console.log("Inside catch error ", isLiked, !isLiked);
+      setIsLiked(!isLiked);
     }
   };
 
@@ -125,12 +121,12 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     if (!user.accessToken) {
       setIsLiked(false);
     }
-    if (user.likedApartments) {
-      if (user.likedApartments.includes(listing.apt.id)) {
+    if (user.likedListings) {
+      if (user.likedListings.includes(listing.id)) {
         setIsLiked(true);
       }
     }
-  }, [user.likedApartments, user.accessToken]);
+  }, [user.likedListings, user.accessToken]);
 
   return (
     <Card

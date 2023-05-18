@@ -14,7 +14,7 @@ export interface User {
   accessToken: Nullable<string>;
   refreshToken: Nullable<string>;
   profilePic: Nullable<string>;
-  likedApartments: Nullable<number[]>;
+  likedListings: Nullable<number[]>;
 }
 
 export enum USER_ACTIONS {
@@ -40,7 +40,7 @@ export const INITIAL_USER_STATE: User = {
   accessToken: null,
   refreshToken: null,
   profilePic: null,
-  likedApartments: null,
+  likedListings: null,
 };
 
 function userReducer(userState: User, action: UserAction) {
@@ -53,12 +53,10 @@ function userReducer(userState: User, action: UserAction) {
     }
     case USER_ACTIONS.BLACKLIST: {
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("accessToken");
       return INITIAL_USER_STATE;
     }
     case USER_ACTIONS.LOGIN: {
       localStorage.setItem("refreshToken", action.payload!.refreshToken!);
-      localStorage.setItem("accessToken", action.payload!.accessToken!);
       return {
         ...userState,
         accessToken: action.payload!.accessToken,
@@ -66,7 +64,6 @@ function userReducer(userState: User, action: UserAction) {
       };
     }
     case USER_ACTIONS.POPULATE: {
-      localStorage.setItem("userId", String(action.payload!.id));
       return {
         ...userState,
         id: action.payload!.id,
@@ -76,7 +73,7 @@ function userReducer(userState: User, action: UserAction) {
         email: action.payload!.email,
         isStaff: action.payload!.isStaff,
         profilePic: action.payload!.profilePic,
-        likedApartments: action.payload!.likedApartments,
+        likedListings: action.payload!.likedListings,
       };
     }
     case USER_ACTIONS.UPDATE_FIELD: {

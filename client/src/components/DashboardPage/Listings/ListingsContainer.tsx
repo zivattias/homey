@@ -5,6 +5,7 @@ import SkeletonContainer from ".././SkeletonContainer";
 import ListingCard from "./ListingCard";
 
 export interface ListingProps {
+  liked_by_users: number[];
   id: number;
   created: string;
   modified: string;

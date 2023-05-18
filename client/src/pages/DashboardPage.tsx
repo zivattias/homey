@@ -89,6 +89,7 @@ const DashboardPage = () => {
         apartments={apartments}
         setApartments={setApartments}
         setIsListingModified={setIsListingModified}
+        setListings={setListings}
       />
       {listings.length >= 1 && (
         <ListingsContainer

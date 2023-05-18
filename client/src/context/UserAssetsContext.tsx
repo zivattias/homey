@@ -3,7 +3,7 @@ import React from "react";
 type EmptyArrayOrNums = [] | number[];
 
 interface UserAssets {
-    likedApartments: EmptyArrayOrNums;
+    likedListings: EmptyArrayOrNums;
     apartments: EmptyArrayOrNums;
     listings: EmptyArrayOrNums;
     proposals: EmptyArrayOrNums;
@@ -12,7 +12,7 @@ interface UserAssets {
 export const USER_ASSETS_ACTIONS = {
     LIKE_APARTMENT: "likeApartment",
     UNLIKE_APARTMENT: "unlikeApartment",
-    GET_LIKED_APARTMENTS: "getLikedApartments",
+    GET_LIKED_LISTINGS: "getLikedListings",
     UPLOAD_APARTMENT: "uploadApartment",
     EDIT_APARTMENT: "editApartment",
     DELETE_APARTMENT: "deleteApartment",
@@ -26,7 +26,7 @@ export const USER_ASSETS_ACTIONS = {
 };
 
 export const INITIAL_USER_ASSETS: UserAssets = {
-    likedApartments: [],
+    likedListings: [],
     apartments: [],
     listings: [],
     proposals: [],

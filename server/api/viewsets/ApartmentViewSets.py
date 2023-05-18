@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from ..models import Apartment, ApartmentPhoto, LikedApartments, Listing
+from ..models import Apartment, ApartmentPhoto, LikedListings, Listing
 from ..permissions.ApartmentPermissions import (
     ApartmentPermissions,
     ApartmentPhotoPermissions,
@@ -125,38 +125,41 @@ class ApartmentPhotoViewSet(
 
 # Like & unlike an apartment
 @api_view(["PUT", "DELETE"])
-def like_apartment(request, apt_id):
+def like_listing(request, listing_id):
     try:
-        apartment = Apartment.objects.get(id=apt_id)
-    except Apartment.DoesNotExist:
+        listing = Listing.objects.get(id=listing_id)
+        if listing.apt.user.id == request.user.id:
+            return Response(
+                status=status.HTTP_401_UNAUTHORIZED,
+                data={"listing": "Like action not allowed on self listings"},
+            )
+    except Listing.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     user = request.user
     if user.is_authenticated:
         if request.method == "PUT":
-            _, created = LikedApartments.objects.get_or_create(
-                user=user, apartment=apartment
-            )
+            _, created = LikedListings.objects.get_or_create(user=user, listing=listing)
             if not created:
                 return Response(
                     {
-                        "message": f"Apartment {apartment.id} already liked by {user.first_name} {user.last_name}"
+                        "message": f"Listing {listing.id} already liked by {user.first_name} {user.last_name}"
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             return Response(
                 {
-                    "message": f"Apartment {apartment.id} liked by {user.first_name} {user.last_name}"
+                    "message": f"Listing {listing.id} liked by {user.first_name} {user.last_name}"
                 },
                 status=status.HTTP_201_CREATED,
             )
 
         if request.method == "DELETE":
             try:
-                like = LikedApartments.objects.get(user=user, apartment=apartment)
-            except LikedApartments.DoesNotExist:
+                like = LikedListings.objects.get(user=user, listing=listing)
+            except LikedListings.DoesNotExist:
                 return Response(
-                    {"message": "Can't unlike a non-liked apartment"},
+                    {"message": "Can't unlike a non-liked listing"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             like.delete()

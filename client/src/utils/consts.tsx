@@ -27,9 +27,11 @@ export const API_ENDPOINTS = {
   UPLOAD_PIC: "upload_pic/",
   APARTMENTS: {
     BASE: "apartments/",
+  },
+  LISTINGS: {
+    BASE: "listings/",
     LIKE: "like/",
   },
-  LISTINGS: "listings/",
   PROPOSALS: "proposals/",
   REVIEWS: "reviews/",
 };

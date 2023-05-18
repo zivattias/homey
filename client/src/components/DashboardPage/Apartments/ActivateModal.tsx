@@ -61,7 +61,7 @@ const ActivateModal = ({
     try {
       const response = await sendRequest(
         "post",
-        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS,
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS.BASE,
         user.accessToken!,
         {
           apt: String(apartmentId),
@@ -122,7 +122,9 @@ const ActivateModal = ({
           // helperText={suiteResult.getErrors("username")}
           id="from_date"
           InputLabelProps={{ shrink: true }}
-          inputProps={{ min: new Date().toISOString().split("T")[0] }}
+          inputProps={{
+            min: new Date().toISOString().split("T")[0],
+          }}
           sx={{ marginBottom: "1em" }}
           type="date"
           value={fromDate.split("T")[0]}

@@ -41,7 +41,7 @@ const DeleteModal = ({
       setLoading(true);
       const response = await sendRequest(
         "delete",
-        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS + `${listingId}/status/`,
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS.BASE + `${listingId}/status/`,
         accessToken!,
         {}
       );

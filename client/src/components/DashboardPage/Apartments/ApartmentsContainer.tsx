@@ -2,17 +2,20 @@ import React from "react";
 import ApartmentCard, { ApartmentProps } from ".././Apartments/ApartmentCard";
 import { Container, Grid, Typography } from "@mui/material";
 import SkeletonContainer from ".././SkeletonContainer";
+import { ListingProps } from "../Listings/ListingsContainer";
 
 const ApartmentsContainer = ({
   loading,
   apartments,
   setApartments,
   setIsListingModified,
+  setListings,
 }: {
   loading: boolean;
   apartments: ApartmentProps[];
   setApartments: React.Dispatch<React.SetStateAction<ApartmentProps[]>>;
   setIsListingModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setListings: React.Dispatch<React.SetStateAction<ListingProps[]>>;
 }) => {
   if (loading) {
     return <SkeletonContainer />;
@@ -39,6 +42,7 @@ const ApartmentsContainer = ({
                 apartment={apartment}
                 key={apartment.uuid}
                 setIsListingModified={setIsListingModified}
+                setListings={setListings}
               />
             </Grid>
           );

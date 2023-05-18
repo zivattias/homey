@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { ListingProps } from "./ListingsContainer";
 import DeleteModal from "./DeleteModal";
+import { FavoriteOutlined } from "@mui/icons-material";
 
 const ListingCard = ({
   listing,
@@ -93,6 +94,7 @@ const ListingCard = ({
         </CardContent>
         <CardActions sx={{ p: 2 }}>
           <Button
+            sx={{ mr: 2 }}
             variant="contained"
             color="error"
             onClick={() => setDeleteModal(!deleteModal)}
@@ -100,6 +102,15 @@ const ListingCard = ({
           >
             Delete
           </Button>
+          <Chip
+            icon={<FavoriteOutlined fontSize="small" color="error" />}
+            label={`Likes: ${
+              listing.liked_by_users.length > 0
+                ? listing.liked_by_users.length
+                : "0"
+            }`}
+            variant="outlined"
+          />
         </CardActions>
       </Card>
       <DeleteModal

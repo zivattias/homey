@@ -22,7 +22,7 @@ export default function HomePage() {
   const fetchFeedListings = async () => {
     try {
       const response = await axios.get(
-        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS
+        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS.BASE
       );
       if (response.status == 200) {
         setListings(response.data);

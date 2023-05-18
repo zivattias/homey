@@ -25,6 +25,13 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { Link, useNavigate } from "react-router-dom";
 import pagesEndpoints from "./funcs/pagesEndpoints";
 import { useAlert } from "react-alert";
+import SettingsIcon from "@mui/icons-material/Settings";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const pages = ["Sublets", "Long-term", "Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -57,6 +64,16 @@ function Navbar() {
       navigate("/dashboard");
       handleCloseUserMenu();
     },
+  };
+
+  // Settings-Icons map object:
+  const settingsIconsObj: { [key: string]: JSX.Element } = {
+    Login: <LoginIcon fontSize="small" />,
+    Register: <BorderColorIcon fontSize="small" />,
+    Logout: <LogoutIcon fontSize="small" />,
+    Profile: <PersonIcon fontSize="small" />,
+    Account: <SettingsIcon fontSize="small" />,
+    Dashboard: <DashboardIcon fontSize="small" />,
   };
 
   const theme = useTheme();
@@ -346,7 +363,10 @@ function Navbar() {
                           : handleCloseUserMenu
                       }
                     >
-                      <Typography textAlign="center">{setting}</Typography>
+                      {settingsIconsObj[setting]}
+                      <Typography ml={1} textAlign="center">
+                        {setting}
+                      </Typography>
                     </MenuItem>
                   ))
                 : loggedOutSettings.map((setting) => (
@@ -358,7 +378,10 @@ function Navbar() {
                         setModalType(setting);
                       }}
                     >
-                      <Typography textAlign="center">{setting}</Typography>
+                      {settingsIconsObj[setting]}
+                      <Typography ml={1} textAlign="center">
+                        {setting}
+                      </Typography>
                     </MenuItem>
                   ))}
               {openModal && modalType ? (

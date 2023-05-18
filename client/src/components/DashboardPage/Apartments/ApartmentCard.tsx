@@ -13,6 +13,7 @@ import checkboxesData from "../../UploadPage/consts";
 import { Box, Chip, Divider } from "@mui/material";
 import DeleteModal from "./DeleteModal";
 import ActivateModal from "../Apartments/ActivateModal";
+import { ListingProps } from "../Listings/ListingsContainer";
 
 export interface ApartmentProps {
   apt_num: number;
@@ -25,7 +26,6 @@ export interface ApartmentProps {
   is_wifi: boolean;
   pet_friendly: boolean;
   smoke_friendly: boolean;
-  liked_by_users: number[];
   listings: object[];
   reviews: [];
   square_meter: number;
@@ -44,10 +44,12 @@ const ApartmentCard = ({
   apartment,
   setUserApartments,
   setIsListingModified,
+  setListings,
 }: {
   apartment: ApartmentProps;
   setUserApartments: React.Dispatch<React.SetStateAction<ApartmentProps[]>>;
   setIsListingModified: React.Dispatch<React.SetStateAction<boolean>>;
+  setListings: React.Dispatch<React.SetStateAction<ListingProps[]>>;
 }) => {
   const user = useUser();
   const [photos, setPhotos] = React.useState<ApartmentPhoto[]>([]);
@@ -128,9 +130,6 @@ const ApartmentCard = ({
               variant="outlined"
             />
           </Box>
-          <Typography gutterBottom variant="body2" component="div">
-            {`Liked by ${apartment.liked_by_users.length} users`}
-          </Typography>
           <Divider sx={{ mb: 2, mt: 1 }}></Divider>
           <Typography mb="0.7em" variant="body2">
             <span style={{ fontWeight: "bold" }}>Added at:</span>{" "}
@@ -169,6 +168,7 @@ const ApartmentCard = ({
         </CardActions>
       </Card>
       <DeleteModal
+        setListings={setListings}
         setUserApartments={setUserApartments}
         apartmentId={apartment.id}
         modalState={deleteModal}

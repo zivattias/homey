@@ -52,7 +52,7 @@ function App() {
                 lastName: response.data.last_name,
                 isStaff: response.data.is_staff,
                 profilePic: response.data.profile_pic,
-                likedApartments: response.data.liked_apartments,
+                likedListings: response.data.liked_listings,
                 ...response.data,
               },
             });

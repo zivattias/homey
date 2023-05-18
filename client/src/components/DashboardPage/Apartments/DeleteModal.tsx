@@ -9,6 +9,7 @@ import sendRequest from "../../../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../../utils/consts";
 import { useUser } from "../../../context/UserContext";
 import { LoadingButton } from "@mui/lab";
+import { ListingProps } from "../Listings/ListingsContainer";
 
 const style = {
   borderRadius: "10px",
@@ -27,6 +28,7 @@ type DeleteModalProps = {
   modalState: boolean;
   apartmentId: number;
   setUserApartments: React.Dispatch<React.SetStateAction<ApartmentProps[]>>;
+  setListings: React.Dispatch<React.SetStateAction<ListingProps[]>>;
 };
 
 const DeleteModal = ({
@@ -34,6 +36,7 @@ const DeleteModal = ({
   modalState,
   apartmentId,
   setUserApartments,
+  setListings,
 }: DeleteModalProps) => {
   const alert = useAlert();
   const user = useUser();
@@ -52,6 +55,9 @@ const DeleteModal = ({
           prevApartments.filter((apartment) => apartment.id !== apartmentId)
         );
         alert.show(`Deleted apartment ${apartmentId}`, { type: "info" });
+        setListings((prevListings) =>
+          prevListings.filter((listing) => listing.apt !== apartmentId)
+        );
         setLoading(false);
         toggleModalState();
       }
@@ -74,7 +80,9 @@ const DeleteModal = ({
           {`Are you sure you want to delete apartment #${apartmentId}?`}
         </Typography>
         <Typography id="delete-modal-description" sx={{ my: 2 }}>
-          The apartment will be deleted from your account and dashboard.
+          The apartment and{" "}
+          <span style={{ fontWeight: "bold" }}>all its listings</span> will be
+          deleted from your account and dashboard.
         </Typography>
         <LoadingButton
           color="error"
