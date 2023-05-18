@@ -15,16 +15,27 @@ import ProfilePage from "./pages/ProfilePage";
 import { useAlert } from "react-alert";
 import AccountPage from "./pages/AccountPage";
 import DashboardPage from "./pages/DashboardPage";
+import { PaletteMode } from "@mui/material";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
 
 function App() {
+  const userTheme = useMediaQuery(`(prefers-color-scheme: dark)`)
+    ? "dark"
+    : "light";
+
+  React.useEffect(() => {
+    (setThemeMode as React.Dispatch<React.SetStateAction<string>>)(userTheme);
+  }, [userTheme]);
+
   const alert = useAlert();
   const dispatch = useUserDispatch();
   const user = useUser();
   const [refreshToken] = useLocalStorage("refreshToken", "");
+  const [themeMode, setThemeMode] = useLocalStorage("themeMode", userTheme);
+
   console.log(user);
   React.useEffect(() => {
     const getAccessToken = async () => {
@@ -67,14 +78,12 @@ function App() {
     }
   }, []);
 
-  const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`);
-  const [mode, setMode] = React.useState<"light" | "dark">(
-    prefersDarkMode ? "dark" : "light"
-  );
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+        (setThemeMode as React.Dispatch<React.SetStateAction<string>>)(
+          (prevMode) => (prevMode === "light" ? "dark" : "light")
+        );
       },
     }),
     []
@@ -86,10 +95,10 @@ function App() {
           fontFamily: ["Poppins", "Roboto", "system-ui"].join(","),
         },
         palette: {
-          mode,
+          mode: themeMode as PaletteMode,
         },
       }),
-    [mode]
+    [themeMode]
   );
 
   return (

@@ -16,3 +16,7 @@
 body {
   min-height: 100vh;
 }
+
+button:focus { 
+  outline: none !important;
+}

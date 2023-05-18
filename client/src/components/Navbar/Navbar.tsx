@@ -206,20 +206,15 @@ function Navbar() {
               <Box
                 sx={{
                   display: "flex",
-                  width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                   bgcolor: "inherit",
                   color: "text.primary",
                   borderRadius: 1,
-                  p: 3,
+                  p: 1,
                 }}
               >
-                <IconButton
-                  sx={{ ml: 1 }}
-                  onClick={colorMode.toggleColorMode}
-                  color="inherit"
-                >
+                <IconButton onClick={colorMode.toggleColorMode} color="inherit">
                   {theme.palette.mode === "dark" ? (
                     <DarkModeIcon />
                   ) : (
@@ -289,14 +284,10 @@ function Navbar() {
                 bgcolor: "inherit",
                 color: "text.primary",
                 borderRadius: 1,
-                p: 3,
+                mr: 2,
               }}
             >
-              <IconButton
-                sx={{ ml: 1 }}
-                onClick={colorMode.toggleColorMode}
-                color="inherit"
-              >
+              <IconButton onClick={colorMode.toggleColorMode} color="inherit">
                 {theme.palette.mode === "dark" ? (
                   <DarkModeIcon />
                 ) : (
