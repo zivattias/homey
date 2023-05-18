@@ -9,17 +9,15 @@ const ListingsFeedContainer = ({
 }) => {
   return (
     <>
-      <Container>
-        <Grid container>
-          {listings.map((listing) => {
-            return (
-              <Grid key={listing.id} p={2} item xs={12} sm={6} md={4}>
-                <ListingFeedCard listing={listing} key={listing.id} />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
+      <Grid px={6} container>
+        {listings.map((listing) => {
+          return (
+            <Grid key={listing.id} p={2} item xs={12} md={6} lg={4} xl={3}>
+              <ListingFeedCard listing={listing} key={listing.id} />
+            </Grid>
+          );
+        })}
+      </Grid>
     </>
   );
 };
