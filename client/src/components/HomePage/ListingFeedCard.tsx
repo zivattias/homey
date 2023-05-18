@@ -7,6 +7,7 @@ import {
   CardActions,
   Box,
   Avatar,
+  Button,
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import ApartmentImage from "../DashboardPage/Apartments/ApartmentImage";
@@ -148,19 +149,23 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
         })}
       </Carousel>
       <CardContent>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            justifyContent: "space-between",
-          }}
-        >
+        <Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography pr={2} gutterBottom variant="h6" component="div">
-              {`${listing.title} • ${parseInt(
-                listing.price
-              ).toLocaleString()}₪`}
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-block",
+                  maxWidth: { xl: "180px" },
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  verticalAlign: "top",
+                }}
+              >
+                {listing.title}
+              </Box>{" "}
+              {`• ${parseInt(listing.price).toLocaleString()}₪`}
             </Typography>
             {user.id !== listing.user_id &&
               (isLiked ? (
@@ -184,10 +189,22 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
                 />
               ))}
           </Box>
-          <Typography>{listing.description}</Typography>
+          <Typography
+            minHeight={48}
+            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+          >
+            {listing.description}
+          </Typography>
         </Box>
         <Divider sx={{ mb: 2, mt: 1 }}></Divider>
-        <Box sx={{ position: "relative" }}>
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
           <Avatar
             sx={{ position: "absolute", right: "0" }}
             src={listing.user_photo}
@@ -217,23 +234,20 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           </Typography>
           {icons.length >= 1 && (
             <>
-              <Typography fontWeight="bold" mb="0.4em" variant="body2">
-                Attributes:
-              </Typography>
-              {icons}
+              <Box mb="4em">
+                <Typography fontWeight="bold" mb="0.4em" variant="body2">
+                  Attributes:
+                </Typography>
+                {icons}
+              </Box>
             </>
           )}
         </Box>
       </CardContent>
       <CardActions sx={{ p: 2, bottom: "0", position: { sm: "absolute" } }}>
-        {/* <Button
-          variant="outlined"
-          onClick={() => setDeleteModal(!deleteModal)}
-          size="small"
-          color="error"
-        >
-          Delete
-        </Button> */}
+        <Button variant="outlined" color="primary">
+          Sublet
+        </Button>
       </CardActions>
     </Card>
   );

@@ -41,7 +41,9 @@ const DeleteModal = ({
       setLoading(true);
       const response = await sendRequest(
         "delete",
-        FULL_API_ENDPOINT + API_ENDPOINTS.LISTINGS.BASE + `${listingId}/status/`,
+        FULL_API_ENDPOINT +
+          API_ENDPOINTS.LISTINGS.BASE +
+          `${listingId}/status/`,
         accessToken!,
         {}
       );
@@ -63,7 +65,7 @@ const DeleteModal = ({
   return (
     <Modal
       open={modalState}
-      onClose={toggleModalState}
+      onClose={() => toggleModalState(!modalState)}
       aria-labelledby="delete-modal-title"
       aria-describedby="delete-modal-description"
     >
