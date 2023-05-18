@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from ..viewsets.ApartmentViewSets import (
     ApartmentPhotoViewSet,
     ApartmentViewSet,
-    like_apartment,
+    like_listing,
 )
 from ..viewsets.GetS3PresignedURL import get_s3_presigned_URL
 from ..viewsets.JWTViewSets import BlacklistView, RegistrationView
@@ -36,7 +36,7 @@ urlpatterns = [
     path("me/", UserProfileView, name="profile"),
     path("user_exists/", user_exists, name="user_exists"),
     path("email_exists/", email_exists, name="email_exists"),
-    path("apartments/<int:apt_id>/like/", like_apartment, name="like_apartment"),
+    path("listings/<int:listing_id>/like/", like_listing, name="like_listing"),
     path(
         "apartments/<str:apt_uuid>/photos/",
         ApartmentPhotoViewSet.as_view({"post": "create", "get": "list"}),

@@ -4,20 +4,7 @@ from .ListingSerializer import CreateListingSerializer
 
 from .ReviewSerializer import ReviewSerializer
 
-from ..models import LikedApartments, Apartment, ApartmentPhoto
-
-
-class BasicApartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Apartment
-        exclude = (
-            "created",
-            "modified",
-            "uuid",
-            "street",
-            "street_num",
-            "user",
-        )
+from ..models import Apartment, ApartmentPhoto
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
@@ -39,14 +26,6 @@ class ApartmentSerializer(serializers.ModelSerializer):
             "user": {"required": False},
             "uuid": {"required": False},
         }
-
-
-class LikedApartmentsSerializer(serializers.ModelSerializer):
-    apartment = ApartmentSerializer(many=True)
-
-    class Meta:
-        model = LikedApartments
-        fields = ("apartment",)
 
 
 class ApartmentPhotosSerializer(serializers.ModelSerializer):

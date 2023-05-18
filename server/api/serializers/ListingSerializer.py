@@ -1,5 +1,14 @@
-from ..models import Listing
+from .GetListingSerializer import GetListingSerializer
+from ..models import Listing, LikedListings
 from rest_framework import serializers
+
+
+class LikedListingsSerializer(serializers.ModelSerializer):
+    listing = GetListingSerializer(many=True)
+
+    class Meta:
+        model = LikedListings
+        fields = ("listing",)
 
 
 class CreateListingSerializer(serializers.ModelSerializer):

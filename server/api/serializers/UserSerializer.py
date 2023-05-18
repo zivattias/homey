@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .ApartmentSerializer import LikedApartmentsSerializer
+from .ListingSerializer import LikedListingsSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
-    liked_apartments = LikedApartmentsSerializer
+    liked_listings = LikedListingsSerializer
     profile_pic = serializers.SerializerMethodField()
     password = serializers.CharField(
         write_only=True, required=False, validators=[validate_password]
@@ -17,8 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
     def get_profile_pic(self, obj):
         return obj.user_profile.profile_pic
 
-    def get_liked_apartments(self, obj):
-        return obj.liked_apartments
+    def get_liked_listings(self, obj):
+        return obj.liked_listings
 
     class Meta:
         model = User
@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "is_staff",
             "profile_pic",
-            "liked_apartments",
+            "liked_listings",
             "password",
             "confirm_password",
         )

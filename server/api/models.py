@@ -15,13 +15,13 @@ from .utils.consts import IL_ZIPCODE_REGEX
 # Create your models here.
 
 # Backend models:
-# Apartment, Listing, Proposal, LikedApartments, Review
+# Apartment, Listing, Proposal, LikedListings, Review
 
 __all__ = [
     "Apartment",
     "Listing",
     "Proposal",
-    "LikedApartments",
+    "LikedListings",
     "Review",
     "UserProfile",
 ]
@@ -77,12 +77,6 @@ class Apartment(TimeStampedModel, models.Model):
     is_wifi = models.BooleanField(db_column="is_wifi", default=False)
     is_balcony = models.BooleanField(db_column="is_balcony", default=False)
     is_parking = models.BooleanField(db_column="is_parking", default=False)
-
-    # Many-to-Many relationship w/ User thru LikedApartments:
-    liked_by_users = models.ManyToManyField(
-        User, through="LikedApartments", related_name="liked_apartments"
-    )
-
     is_deleted = models.BooleanField(default=False)
 
     def has_active_listing(self):
@@ -108,6 +102,11 @@ class Listing(TimeStampedModel, models.Model):
         db_column="duration", null=True, blank=True, default=0
     )
     is_active = models.BooleanField(db_column="is_active", default=True)
+
+    # Many-to-Many relationship w/ User thru LikedListings:
+    liked_by_users = models.ManyToManyField(
+        User, through="LikedListings", related_name="liked_listings"
+    )
 
     class Meta:
         db_table = "listings"
@@ -189,19 +188,19 @@ class Review(TimeStampedModel, models.Model):
         ]
 
 
-class LikedApartments(models.Model):
+class LikedListings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "liked_apartments"
+        db_table = "liked_listings"
         constraints = [
             models.UniqueConstraint(
                 fields=[
                     "user",
-                    "apartment",
+                    "listing",
                 ],
-                name="unique_user_liked_apartments",
+                name="unique_user_liked_listings",
             )
         ]
 

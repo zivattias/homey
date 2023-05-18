@@ -1,6 +1,18 @@
-from .ApartmentSerializer import BasicApartmentSerializer
-from ..models import ApartmentPhoto, Listing, UserProfile
+from ..models import ApartmentPhoto, Listing, UserProfile, Apartment
 from rest_framework import serializers
+
+
+class BasicApartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Apartment
+        exclude = (
+            "created",
+            "modified",
+            "uuid",
+            "street",
+            "street_num",
+            "user",
+        )
 
 
 class GetListingSerializer(serializers.ModelSerializer):
