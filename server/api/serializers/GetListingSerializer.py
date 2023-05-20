@@ -1,5 +1,12 @@
+import os
+from googlemaps import Client
+from dotenv import load_dotenv
 from ..models import ApartmentPhoto, Listing, UserProfile, Apartment
 from rest_framework import serializers
+
+load_dotenv()
+
+gmaps = Client(key=os.getenv("GOOGLE_MAPS_API_KEY"))
 
 
 class BasicApartmentSerializer(serializers.ModelSerializer):
@@ -21,6 +28,11 @@ class GetListingSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     user_id = serializers.SerializerMethodField()
     user_photo = serializers.SerializerMethodField()
+    location = serializers.SerializerMethodField()
+
+    def get_location(self, obj: Listing):
+        response = gmaps.geocode(obj.title)
+        return response[0]["geometry"]["location"]
 
     def get_user_photo(self, obj: Listing):
         user_profile = UserProfile.objects.get(user__id=obj.apt.user.id)
