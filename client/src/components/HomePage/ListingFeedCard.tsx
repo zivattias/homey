@@ -23,6 +23,7 @@ import sendRequest from "../../utils/funcs/sendRequest";
 import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { AxiosError } from "axios";
 import { useAlert } from "react-alert";
+import { MarkerCoordinates } from "./Map/Map";
 
 export interface FeedListingProps {
   id: number;
@@ -52,6 +53,7 @@ export interface FeedListingProps {
   duration: number;
   is_active: boolean;
   liked_by_users: number[];
+  location: MarkerCoordinates;
 }
 
 const likeIconStyles = {
@@ -133,7 +135,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     <Card
       sx={{
         width: "100%",
-        minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "600px" },
+        minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "725px" },
         position: "relative",
       }}
     >

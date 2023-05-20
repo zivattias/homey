@@ -16,9 +16,7 @@ import axios from "axios";
 
 export default function HomePage() {
   const [listings, setListings] = React.useState<FeedListingProps[]>([]);
-  const user = useUser();
   const alert = useAlert();
-
   const fetchFeedListings = async () => {
     try {
       const response = await axios.get(
