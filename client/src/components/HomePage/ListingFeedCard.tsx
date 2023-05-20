@@ -133,7 +133,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     <Card
       sx={{
         width: "100%",
-        minHeight: { sm: "600px", md: "650px", lg: "600px" },
+        minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "600px" },
         position: "relative",
       }}
     >
@@ -190,8 +190,17 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
               ))}
           </Box>
           <Typography
-            minHeight={48}
-            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+            height={48}
+            sx={{
+              textOverflow: "ellipsis",
+              display: "-webkit-box !important",
+              overflow: "hidden",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+              maxWidth: { xl: "300px" },
+              whiteSpace: "normal",
+              verticalAlign: "top",
+            }}
           >
             {listing.description}
           </Typography>
@@ -216,6 +225,14 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
             {`${listing.duration} day(s)`}
           </Typography>
           <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>From date:</span>{" "}
+            {new Date(listing.from_date).toLocaleDateString("en-GB")}
+          </Typography>
+          <Typography mb="0.7em" variant="body2">
+            <span style={{ fontWeight: "bold" }}>To date:</span>{" "}
+            {new Date(listing.to_date).toLocaleDateString("en-GB")}
+          </Typography>
+          <Typography mb="0.7em" variant="body2">
             <span style={{ fontWeight: "bold" }}>Added by:</span>{" "}
             {listing.user_id == user.id ? "You" : listing.full_name}
           </Typography>
@@ -234,7 +251,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           </Typography>
           {icons.length >= 1 && (
             <>
-              <Box mb="4em">
+              <Box sx={{ mb: { sm: "4em" } }}>
                 <Typography fontWeight="bold" mb="0.4em" variant="body2">
                   Attributes:
                 </Typography>
