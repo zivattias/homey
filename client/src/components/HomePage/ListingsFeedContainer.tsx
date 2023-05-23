@@ -2,7 +2,6 @@ import { Box, Container, Grid } from "@mui/material";
 import React from "react";
 import ListingFeedCard, { FeedListingProps } from "./ListingFeedCard";
 import Map from "./Map/Map";
-import axios from "axios";
 
 const ListingsFeedContainer = ({
   listings,
@@ -27,12 +26,15 @@ const ListingsFeedContainer = ({
       </Grid>
       <Container
         sx={{
-          // Maps display
-          display: { xs: "none", xl: "block" },
-          position: { xl: "sticky" },
+          // Map container
+          zIndex: 3,
+          position: "sticky",
           top: "0",
-          width: { xl: "40%" },
-          height: { xl: "100vh" },
+          px: { xs: 0, xl: 2 },
+          margin: "0",
+          minWidth: { xs: "100%", xl: "" },
+          width: { xs: "100%", xl: "40%" },
+          height: { xs: "35vh", xl: "100vh" },
         }}
       >
         <Map listings={listings} />

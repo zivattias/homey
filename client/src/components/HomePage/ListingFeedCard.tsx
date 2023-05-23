@@ -140,15 +140,13 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
     <Card
       onMouseEnter={() => {
         listingDispatch({
-          type: LISTING_ACTIONS.CHANGE_ID,
-          payload: { id: listing.id, location: listing.location },
+          type: LISTING_ACTIONS.SET_ACTIVE,
+          payload: {
+            id: listing.id,
+            location: listing.location,
+          },
         });
       }}
-      // onMouseLeave={() => {
-      //   listingDispatch({
-      //     type: LISTING_ACTIONS.RESET_ID,
-      //   });
-      // }}
       sx={{
         width: "100%",
         minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "725px" },
@@ -280,7 +278,11 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
         </Box>
       </CardContent>
       <CardActions sx={{ p: 2, bottom: "0", position: { sm: "absolute" } }}>
-        <Button variant="outlined" color="primary">
+        <Button
+          variant="outlined"
+          color="primary"
+          disabled={user.id === listing.user_id}
+        >
           Sublet
         </Button>
       </CardActions>

@@ -7,8 +7,8 @@ export interface IListing {
 }
 
 export enum LISTING_ACTIONS {
-  CHANGE_ID = "changeId",
-  RESET_ID = "resetId",
+  SET_ACTIVE = "setActive",
+  RESET_ACTIVE = "resetActive",
 }
 
 interface ListingAction {
@@ -23,14 +23,14 @@ export const INITIAL_LISTING_STATE: IListing = {
 
 const listingReducer = (state: IListing, action: ListingAction) => {
   switch (action.type) {
-    case LISTING_ACTIONS.CHANGE_ID: {
+    case LISTING_ACTIONS.SET_ACTIVE: {
       return {
         ...state,
         id: action.payload?.id,
         location: action.payload?.location,
       };
     }
-    case LISTING_ACTIONS.RESET_ID: {
+    case LISTING_ACTIONS.RESET_ACTIVE: {
       return INITIAL_LISTING_STATE;
     }
     default: {

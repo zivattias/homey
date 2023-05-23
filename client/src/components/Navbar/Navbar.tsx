@@ -33,7 +33,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const pages = ["Sublets", "Long-term", "Upload"];
+const pages = ["Upload"];
 const loggedInSettings = ["Profile", "Account", "Dashboard", "Logout"];
 const loggedOutSettings = ["Login", "Register"];
 

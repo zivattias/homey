@@ -55,7 +55,8 @@ const Map = ({ listings }: { listings: FeedListingProps[] }) => {
 
   React.useEffect(() => {
     if (map && listingContext.location) {
-      map.setCenter(listingContext.location);
+      const { lng, lat } = listingContext.location;
+      map.setCenter({ lng, lat });
     }
   }, [listingContext.location]);
 
@@ -64,7 +65,11 @@ const Map = ({ listings }: { listings: FeedListingProps[] }) => {
       {loading && (
         <Skeleton animation="pulse" variant="rounded" sx={{ height: "100%" }} />
       )}
-      <Box component="div" sx={{ height: "100%", zIndex: "1" }} ref={mapRef}>
+      <Box
+        component="div"
+        sx={{ height: "100%", width: "100%", zIndex: "1", margin: 0, p: 0 }}
+        ref={mapRef}
+      >
         {listings.map((listing, index) => {
           return (
             <Marker

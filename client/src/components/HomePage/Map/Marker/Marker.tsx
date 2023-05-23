@@ -2,7 +2,7 @@ import React from "react";
 import { MarkerCoordinates } from "../Map";
 import ListingFeedCard, { FeedListingProps } from "../../ListingFeedCard";
 import OverlayView from "./OverlayView";
-import { Box, Chip, Modal, styled } from "@mui/material";
+import { Box, Chip, Modal, styled, useTheme } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 import ListingMarker from "./ListingMarker";
 import {
@@ -34,6 +34,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 }));
 
 const Marker = ({ listing, location, map }: MarkerProps) => {
+  const theme = useTheme();
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
   const markerRef = React.useRef<HTMLDivElement>(null);
@@ -41,6 +42,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
 
   const listingContext = useListing();
   const listingDispatch = useListingDispatch();
+  console.log(listingContext);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -52,6 +54,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      console.log(listingContext);
       if (
         markerRef.current &&
         listingMarkerRef.current &&
@@ -60,7 +63,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
       ) {
         setIsClicked(false);
         listingDispatch({
-          type: LISTING_ACTIONS.RESET_ID,
+          type: LISTING_ACTIONS.RESET_ACTIVE,
         });
       }
     };
@@ -90,6 +93,21 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
           zIndex={isClicked ? 3 : isHovered ? 2 : 1}
         >
           <StyledChip
+            sx={{
+              backgroundColor: isClicked
+                ? theme.palette.mode == "dark"
+                  ? "white"
+                  : "black"
+                : theme.palette.mode == "dark"
+                ? "black"
+                : "white",
+              color:
+                isClicked && isHovered
+                  ? "black"
+                  : isClicked
+                  ? "white"
+                  : "black",
+            }}
             label={
               <span>
                 <span style={{ fontSize: "16px" }}>₪</span>
