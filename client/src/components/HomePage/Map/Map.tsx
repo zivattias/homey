@@ -3,6 +3,7 @@ import React from "react";
 import { FeedListingProps } from "../ListingFeedCard";
 import axios from "axios";
 import Marker from "./Marker/Marker";
+import { useListing } from "../../../context/ListingContext";
 
 export type MarkerCoordinates = {
   lng: number;
@@ -10,9 +11,9 @@ export type MarkerCoordinates = {
 };
 
 const Map = ({ listings }: { listings: FeedListingProps[] }) => {
+  const listingContext = useListing();
   const mapRef = React.useRef();
   const [map, setMap] = React.useState<google.maps.Map>();
-  const BASE_COORDINATES = { lat: 32.0716405, lng: 34.7742197 }; // Tel-Aviv
   const theme = useTheme();
   const [loading, setLoading] = React.useState<boolean>(true);
 
@@ -25,7 +26,10 @@ const Map = ({ listings }: { listings: FeedListingProps[] }) => {
       setMap(
         new Map(mapRef.current!, {
           zoom: 13,
-          center: BASE_COORDINATES,
+          center: {
+            lat: 32.0716405,
+            lng: 34.7742197,
+          }, // Tel-Aviv
           disableDefaultUI: true,
           clickableIcons: false,
           mapId:
@@ -48,6 +52,12 @@ const Map = ({ listings }: { listings: FeedListingProps[] }) => {
       });
     }
   }, [map, listings]);
+
+  React.useEffect(() => {
+    if (map && listingContext.location) {
+      map.setCenter(listingContext.location);
+    }
+  }, [listingContext.location]);
 
   return (
     <>

@@ -24,6 +24,10 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../../utils/consts";
 import { AxiosError } from "axios";
 import { useAlert } from "react-alert";
 import { MarkerCoordinates } from "./Map/Map";
+import {
+  LISTING_ACTIONS,
+  useListingDispatch,
+} from "../../context/ListingContext";
 
 export interface FeedListingProps {
   id: number;
@@ -67,7 +71,8 @@ const likeIconStyles = {
 
 const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
   const user = useUser();
-  const dispatch = useUserDispatch();
+  const userDispatch = useUserDispatch();
+  const listingDispatch = useListingDispatch();
   const alert = useAlert();
 
   const [isLiked, setIsLiked] = React.useState<boolean>(false);
@@ -95,14 +100,14 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
         {}
       );
       if (response.status == 201) {
-        dispatch({
+        userDispatch({
           type: USER_ACTIONS.UPDATE_FIELD,
           payload: {
             likedListings: [...user.likedListings!, listing.id],
           },
         });
       } else if (response.status == 204) {
-        dispatch({
+        userDispatch({
           type: USER_ACTIONS.UPDATE_FIELD,
           payload: {
             likedListings: user.likedListings!.filter(
@@ -133,6 +138,17 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
 
   return (
     <Card
+      onMouseEnter={() => {
+        listingDispatch({
+          type: LISTING_ACTIONS.CHANGE_ID,
+          payload: { id: listing.id, location: listing.location },
+        });
+      }}
+      // onMouseLeave={() => {
+      //   listingDispatch({
+      //     type: LISTING_ACTIONS.RESET_ID,
+      //   });
+      // }}
       sx={{
         width: "100%",
         minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "725px" },

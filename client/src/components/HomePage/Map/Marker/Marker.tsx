@@ -5,6 +5,11 @@ import OverlayView from "./OverlayView";
 import { Box, Chip, Modal, styled } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 import ListingMarker from "./ListingMarker";
+import {
+  LISTING_ACTIONS,
+  useListing,
+  useListingDispatch,
+} from "../../../../context/ListingContext";
 
 interface MarkerProps {
   listing: FeedListingProps;
@@ -32,6 +37,10 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
   const [isClicked, setIsClicked] = React.useState<boolean>(false);
   const markerRef = React.useRef<HTMLDivElement>(null);
+  const listingMarkerRef = React.useRef<HTMLDivElement>(null);
+
+  const listingContext = useListing();
+  const listingDispatch = useListingDispatch();
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -45,11 +54,14 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         markerRef.current &&
-        (event.target as Node).previousSibling !== markerRef.current &&
-        (event.target as Node).parentNode?.contains(event.target as Node) &&
-        !markerRef.current.contains(event.target as Node)
+        listingMarkerRef.current &&
+        !markerRef.current.contains(event.target as Node) &&
+        !listingMarkerRef.current.contains(event.target as Node)
       ) {
         setIsClicked(false);
+        listingDispatch({
+          type: LISTING_ACTIONS.RESET_ID,
+        });
       }
     };
 
@@ -60,6 +72,12 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
     };
   }, []);
 
+  React.useEffect(() => {
+    if (listingContext.id) {
+      setIsClicked(listingContext.id === listing.id);
+    }
+  }, [listingContext.id]);
+
   return (
     <>
       {map && (
@@ -69,7 +87,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
             lng: location.lng,
           }}
           map={map}
-          zIndex={isHovered ? 2 : 1}
+          zIndex={isClicked ? 3 : isHovered ? 2 : 1}
         >
           <StyledChip
             label={
@@ -83,7 +101,12 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
             onClick={() => setIsClicked(true)}
             ref={markerRef}
           />
-          {isClicked && <ListingMarker listing={listing} />}
+          {isClicked && (
+            <ListingMarker
+              listingMarkerRef={listingMarkerRef}
+              listing={listing}
+            />
+          )}
         </OverlayView>
       )}
     </>

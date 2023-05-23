@@ -7,6 +7,7 @@ import { API_ENDPOINTS, FULL_API_ENDPOINT } from "../utils/consts";
 import { useAlert } from "react-alert";
 import ListingsFeedContainer from "../components/HomePage/ListingsFeedContainer";
 import axios from "axios";
+import { ListingProvider } from "../context/ListingContext";
 
 // Homepage components:
 // Hero:
@@ -39,7 +40,9 @@ export default function HomePage() {
   return (
     <>
       <Hero></Hero>
-      <ListingsFeedContainer listings={listings} />
+      <ListingProvider>
+        <ListingsFeedContainer listings={listings} />
+      </ListingProvider>
     </>
   );
 }
