@@ -31,7 +31,7 @@ class GetListingSerializer(serializers.ModelSerializer):
     location = serializers.SerializerMethodField()
 
     def get_location(self, obj: Listing):
-        response = gmaps.geocode(obj.title)
+        response = gmaps.geocode(f"{obj.title}, Tel Aviv")
         return response[0]["geometry"]["location"]
 
     def get_user_photo(self, obj: Listing):
