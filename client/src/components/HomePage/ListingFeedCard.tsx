@@ -167,7 +167,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
               >
                 {listing.title}
               </Box>{" "}
-              {`• ${parseInt(listing.price).toLocaleString()}₪`}
+              {`• ₪${parseInt(listing.price).toLocaleString()}`}
             </Typography>
             {user.id !== listing.user_id &&
               (isLiked ? (

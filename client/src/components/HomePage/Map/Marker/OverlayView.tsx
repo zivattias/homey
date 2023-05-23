@@ -13,7 +13,7 @@ const OverlayView = ({
   position,
   pane = "floatPane",
   map,
-  zIndex = 99,
+  zIndex = 1,
   children,
 }: OverlayProps) => {
   const container = React.useMemo(() => {

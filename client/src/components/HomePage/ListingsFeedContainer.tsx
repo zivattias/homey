@@ -35,7 +35,7 @@ const ListingsFeedContainer = ({
           height: { xl: "100vh" },
         }}
       >
-        <Map locations={listings.map((listing) => listing.location)} />
+        <Map listings={listings} />
       </Container>
     </Box>
   );

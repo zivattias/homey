@@ -9,10 +9,9 @@ export type MarkerCoordinates = {
   lat: number;
 };
 
-const Map = ({ locations }: { locations: MarkerCoordinates[] }) => {
+const Map = ({ listings }: { listings: FeedListingProps[] }) => {
   const mapRef = React.useRef();
   const [map, setMap] = React.useState<google.maps.Map>();
-
   const BASE_COORDINATES = { lat: 32.0716405, lng: 34.7742197 }; // Tel-Aviv
   const theme = useTheme();
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -28,10 +27,12 @@ const Map = ({ locations }: { locations: MarkerCoordinates[] }) => {
           zoom: 13,
           center: BASE_COORDINATES,
           disableDefaultUI: true,
+          clickableIcons: false,
           mapId:
             theme.palette.mode === "dark"
               ? "3e63237c9d845ea8"
               : "64ea118c893451f0",
+          gestureHandling: "greedy",
         })
       );
     };
@@ -46,16 +47,23 @@ const Map = ({ locations }: { locations: MarkerCoordinates[] }) => {
         setLoading(false);
       });
     }
-  }, [map, locations]);
+  }, [map, listings]);
 
   return (
     <>
       {loading && (
         <Skeleton animation="pulse" variant="rounded" sx={{ height: "100%" }} />
       )}
-      <Box component="div" sx={{ height: "100%" }} ref={mapRef}>
-        {locations.map((location, index) => {
-          return <Marker location={location} map={map} key={index} />;
+      <Box component="div" sx={{ height: "100%", zIndex: "1" }} ref={mapRef}>
+        {listings.map((listing, index) => {
+          return (
+            <Marker
+              listing={listing}
+              location={listing.location}
+              map={map}
+              key={index}
+            />
+          );
         })}
       </Box>
     </>
