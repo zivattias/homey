@@ -4,11 +4,13 @@ import { MarkerCoordinates } from "../components/HomePage/Map/Map";
 export interface IListing {
   id: null | number | undefined;
   location: null | MarkerCoordinates | undefined;
+  mapActive: null | boolean | undefined;
 }
 
 export enum LISTING_ACTIONS {
   SET_ACTIVE = "setActive",
   RESET_ACTIVE = "resetActive",
+  MAP_STATUS = "setMapStatus",
 }
 
 interface ListingAction {
@@ -19,6 +21,7 @@ interface ListingAction {
 export const INITIAL_LISTING_STATE: IListing = {
   id: null,
   location: null,
+  mapActive: false,
 };
 
 const listingReducer = (state: IListing, action: ListingAction) => {
@@ -28,6 +31,12 @@ const listingReducer = (state: IListing, action: ListingAction) => {
         ...state,
         id: action.payload?.id,
         location: action.payload?.location,
+      };
+    }
+    case LISTING_ACTIONS.MAP_STATUS: {
+      return {
+        ...state,
+        mapActive: action.payload?.mapActive,
       };
     }
     case LISTING_ACTIONS.RESET_ACTIVE: {

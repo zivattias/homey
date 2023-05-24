@@ -2,12 +2,14 @@ import { Box, Container, Grid } from "@mui/material";
 import React from "react";
 import ListingFeedCard, { FeedListingProps } from "./ListingFeedCard";
 import Map from "./Map/Map";
+import { useListing } from "../../context/ListingContext";
 
 const ListingsFeedContainer = ({
   listings,
 }: {
   listings: FeedListingProps[];
 }) => {
+  const mapContext = useListing();
   return (
     <Box
       sx={{
@@ -28,12 +30,12 @@ const ListingsFeedContainer = ({
         sx={{
           // Map container
           zIndex: 3,
-          position: "sticky",
+          position: { xs: "fixed", lg: "sticky" },
           top: "0",
           px: { xs: 0, lg: 2 },
           minWidth: { xs: "100%", lg: "" },
           width: { xs: "100%", lg: "40%" },
-          height: { xs: "40vh", lg: "100vh" },
+          height: { xs: mapContext.mapActive ? "100vh" : "0", lg: "100vh" },
         }}
       >
         <Map listings={listings} />

@@ -6,11 +6,19 @@ import React from "react";
 export default function Hero() {
   return (
     <React.Fragment>
-      <Box height="30em" overflow="hidden" position="relative">
+      <Box
+        sx={{ height: { xs: "20em", md: "30em" } }}
+        overflow="hidden"
+        position="relative"
+      >
         <Box
           component="img"
           src={heroImage}
-          sx={{ height: "30em", width: "100%", objectFit: "cover" }}
+          sx={{
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
+          }}
         />
         {/* The following box is an overlay for the hero image */}
         <Box

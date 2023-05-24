@@ -16,6 +16,7 @@ import { useAlert } from "react-alert";
 import AccountPage from "./pages/AccountPage";
 import DashboardPage from "./pages/DashboardPage";
 import { PaletteMode } from "@mui/material";
+import MapButton from "./components/HomePage/MapButton";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},

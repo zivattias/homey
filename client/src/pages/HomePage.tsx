@@ -8,6 +8,8 @@ import { useAlert } from "react-alert";
 import ListingsFeedContainer from "../components/HomePage/ListingsFeedContainer";
 import axios from "axios";
 import { ListingProvider } from "../context/ListingContext";
+import MapButton from "../components/HomePage/MapButton";
+import { useMediaQuery } from "@mui/material";
 
 // Homepage components:
 // Hero:
@@ -16,6 +18,7 @@ import { ListingProvider } from "../context/ListingContext";
 // - Search component: by neighborhood, zipcode, more(?)
 
 export default function HomePage() {
+  const isSmallDevice = useMediaQuery("(max-width: 1199px)");
   const [listings, setListings] = React.useState<FeedListingProps[]>([]);
   const alert = useAlert();
   const fetchFeedListings = async () => {
@@ -42,6 +45,7 @@ export default function HomePage() {
       <Hero></Hero>
       <ListingProvider>
         <ListingsFeedContainer listings={listings} />
+        {isSmallDevice && <MapButton />}
       </ListingProvider>
     </>
   );

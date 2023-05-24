@@ -122,7 +122,6 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
       if (error instanceof AxiosError) {
         console.log(error.response?.data);
       }
-      console.log("Inside catch error ", isLiked, !isLiked);
       setIsLiked(!isLiked);
     }
   };
@@ -140,6 +139,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
 
   return (
     <Card
+      raised={false}
       className={`listing-card-${listing.id}`}
       onMouseEnter={() => {
         listingDispatch({

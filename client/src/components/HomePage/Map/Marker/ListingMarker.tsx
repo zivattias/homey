@@ -39,14 +39,14 @@ const ListingMarker = ({
         top: "calc(100% + 7px)",
         left: "50%",
         transform: "translateX(-50%)",
-        height: { xs: "120px", xl: "auto" },
       }}
       id={`marker-card-${listing.id}`}
     >
       <Carousel
-        height={150}
+        height={220}
+        duration={250}
         autoPlay={false}
-        indicators={true}
+        indicators={false}
         navButtonsAlwaysVisible={true}
         navButtonsProps={{
           style: {
@@ -56,14 +56,13 @@ const ListingMarker = ({
         }}
         sx={{
           width: { xs: "200px", xl: "100%" },
-          height: { xs: "120px", xl: "100%" },
+          height: { xs: "auto", xl: "100%" },
         }}
       >
         {listing.photos.map((url, index) => {
           return <ApartmentImage photoObj={url} key={index} index={index} />;
         })}
       </Carousel>
-      <Divider sx={{ mt: 1 }}></Divider>
       <Box>
         <CardContent>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -96,6 +95,12 @@ const ListingMarker = ({
                 parseInt(listing.price) / listing.duration
               )} per night`}
             </Typography>
+            <Typography
+              gutterBottom
+              variant={isSmallDevice ? "caption" : "body2"}
+            >
+              {`${listing.duration} day(s)`}
+            </Typography>
             <Typography variant="caption">
               {`${new Date(listing.from_date).toLocaleDateString("en-GB", {
                 day: "2-digit",
@@ -111,12 +116,7 @@ const ListingMarker = ({
         </CardContent>
         <CardActions sx={{ p: user.id !== listing.user_id ? 2 : 0 }}>
           {user.id !== listing.user_id && (
-            <Button
-              sx={{ display: { xs: "none", xl: "block" } }}
-              variant="outlined"
-              color="primary"
-              size="small"
-            >
+            <Button variant="outlined" color="primary" size="small">
               Sublet
             </Button>
           )}
