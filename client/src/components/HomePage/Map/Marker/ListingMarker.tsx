@@ -7,6 +7,7 @@ import {
   CardContent,
   Divider,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import { FeedListingProps } from "../../ListingFeedCard";
@@ -17,11 +18,30 @@ import { useUser } from "../../../../context/UserContext";
 const ListingMarker = ({
   listingMarkerRef,
   listing,
+  map,
 }: {
   listingMarkerRef: React.RefObject<HTMLDivElement>;
   listing: FeedListingProps;
+  map: google.maps.Map;
 }) => {
   const user = useUser();
+  // const [listingPosition, setListingPosition] = React.useState("20px");
+
+  // React.useEffect(() => {
+  //   const calculateMapPosition = () => {
+  //     const mapHeight = map.getDiv().clientHeight;
+  //     const position = mapHeight - 20 + "px";
+  //     console.log("position", position);
+  //     setListingPosition(position);
+  //   };
+
+  //   calculateMapPosition();
+
+  //   window.addEventListener("resize", calculateMapPosition);
+  //   return () => {
+  //     window.removeEventListener("resize", calculateMapPosition);
+  //   };
+  // }, []);
 
   return (
     <Card
@@ -29,10 +49,10 @@ const ListingMarker = ({
       sx={{
         display: "flex",
         flexDirection: { xs: "row", xl: "column" },
-        width: { xs: "400px", xl: "300px" },
+        width: { xs: "300px", xl: "300px" },
         cursor: "pointer",
         position: "absolute",
-        top: "calc(100% + 10px)",
+        top: "calc(100% + 7px)",
         left: "50%",
         transform: "translateX(-50%)",
         height: { xs: "120px", xl: "auto" },
@@ -44,6 +64,12 @@ const ListingMarker = ({
         autoPlay={false}
         indicators={true}
         navButtonsAlwaysVisible={true}
+        navButtonsProps={{
+          style: {
+            width: "20px",
+            height: "20px",
+          },
+        }}
         sx={{
           width: { xs: "200px", xl: "100%" },
           height: { xs: "120px", xl: "100%" },

@@ -8,6 +8,7 @@ import {
   Box,
   Avatar,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import ApartmentImage from "../DashboardPage/Apartments/ApartmentImage";
@@ -70,6 +71,7 @@ const likeIconStyles = {
 };
 
 const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
+  const isSmallDevice = useMediaQuery("(max-width: 767px)");
   const user = useUser();
   const userDispatch = useUserDispatch();
   const listingDispatch = useListingDispatch();
@@ -138,6 +140,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
 
   return (
     <Card
+      className={`listing-card-${listing.id}`}
       onMouseEnter={() => {
         listingDispatch({
           type: LISTING_ACTIONS.SET_ACTIVE,
@@ -149,13 +152,13 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
       }}
       sx={{
         width: "100%",
-        minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "725px" },
+        minHeight: { xs: "auto", sm: "auto", md: "650px", lg: "745px" },
         position: "relative",
       }}
     >
       <Carousel
         duration={250}
-        height={250}
+        height={isSmallDevice ? 150 : 250}
         autoPlay={false}
         indicators={false}
         navButtonsAlwaysVisible={true}
@@ -164,10 +167,15 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           return <ApartmentImage photoObj={url} key={index} index={index} />;
         })}
       </Carousel>
-      <CardContent>
+      <CardContent sx={{ paddingBottom: 0 }}>
         <Box>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography pr={2} gutterBottom variant="h6" component="div">
+            <Typography
+              pr={2}
+              gutterBottom
+              variant={isSmallDevice ? "body1" : "h6"}
+              component="div"
+            >
               <Box
                 component="span"
                 sx={{
@@ -241,11 +249,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
             {`${listing.duration} day(s)`}
           </Typography>
           <Typography mb="0.7em" variant="body2">
-            <span style={{ fontWeight: "bold" }}>From date:</span>{" "}
-            {new Date(listing.from_date).toLocaleDateString("en-GB")}
-          </Typography>
-          <Typography mb="0.7em" variant="body2">
-            <span style={{ fontWeight: "bold" }}>To date:</span>{" "}
+            {new Date(listing.from_date).toLocaleDateString("en-GB")} -{" "}
             {new Date(listing.to_date).toLocaleDateString("en-GB")}
           </Typography>
           <Typography mb="0.7em" variant="body2">
@@ -265,7 +269,7 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
               day: "numeric",
             })}
           </Typography>
-          {icons.length >= 1 && (
+          {!isSmallDevice && icons.length >= 1 && (
             <>
               <Box sx={{ mb: { sm: "4em" } }}>
                 <Typography fontWeight="bold" mb="0.4em" variant="body2">
@@ -277,8 +281,18 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           )}
         </Box>
       </CardContent>
-      <CardActions sx={{ p: 2, bottom: "0", position: { sm: "absolute" } }}>
+      <CardActions
+        sx={{
+          pl: 2,
+          pr: 2,
+          pb: 2,
+          pt: 0,
+          bottom: "0",
+          position: { md: "absolute" },
+        }}
+      >
         <Button
+          size="small"
           variant="outlined"
           color="primary"
           disabled={user.id === listing.user_id}

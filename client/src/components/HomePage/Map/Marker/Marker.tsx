@@ -53,18 +53,18 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
   };
 
   React.useEffect(() => {
+    const listingFeedCard = document.querySelector(
+      `.listing-card-${listing.id}`
+    );
     const handleClickOutside = (event: MouseEvent) => {
-      console.log(listingContext);
       if (
         markerRef.current &&
         listingMarkerRef.current &&
         !markerRef.current.contains(event.target as Node) &&
-        !listingMarkerRef.current.contains(event.target as Node)
+        !listingMarkerRef.current.contains(event.target as Node) &&
+        !listingFeedCard?.contains(event.target as Node)
       ) {
         setIsClicked(false);
-        listingDispatch({
-          type: LISTING_ACTIONS.RESET_ACTIVE,
-        });
       }
     };
 
@@ -76,10 +76,8 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (listingContext.id) {
-      setIsClicked(listingContext.id === listing.id);
-    }
-  }, [listingContext.id]);
+    setIsClicked(listingContext.id === listing.id);
+  }, [listingContext]);
 
   return (
     <>
@@ -94,19 +92,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
         >
           <StyledChip
             sx={{
-              backgroundColor: isClicked
-                ? theme.palette.mode == "dark"
-                  ? "white"
-                  : "black"
-                : theme.palette.mode == "dark"
-                ? "black"
-                : "white",
-              color:
-                isClicked && isHovered
-                  ? "black"
-                  : isClicked
-                  ? "white"
-                  : "black",
+              backgroundColor: isClicked ? "lightgrey" : "white",
             }}
             label={
               <span>
@@ -123,6 +109,7 @@ const Marker = ({ listing, location, map }: MarkerProps) => {
             <ListingMarker
               listingMarkerRef={listingMarkerRef}
               listing={listing}
+              map={map}
             />
           )}
         </OverlayView>
