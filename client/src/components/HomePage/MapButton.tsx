@@ -25,7 +25,7 @@ const MapButton = () => {
       sx={{
         zIndex: "4",
         position: "sticky",
-        bottom: "5px",
+        bottom: "15px",
         left: "50%",
         transform: "translateX(-50%)",
         backgroundColor: theme.palette.background.default,
