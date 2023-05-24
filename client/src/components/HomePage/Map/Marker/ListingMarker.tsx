@@ -25,23 +25,7 @@ const ListingMarker = ({
   map: google.maps.Map;
 }) => {
   const user = useUser();
-  // const [listingPosition, setListingPosition] = React.useState("20px");
-
-  // React.useEffect(() => {
-  //   const calculateMapPosition = () => {
-  //     const mapHeight = map.getDiv().clientHeight;
-  //     const position = mapHeight - 20 + "px";
-  //     console.log("position", position);
-  //     setListingPosition(position);
-  //   };
-
-  //   calculateMapPosition();
-
-  //   window.addEventListener("resize", calculateMapPosition);
-  //   return () => {
-  //     window.removeEventListener("resize", calculateMapPosition);
-  //   };
-  // }, []);
+  const isSmallDevice = useMediaQuery("(max-width: 767px)");
 
   return (
     <Card
@@ -84,10 +68,9 @@ const ListingMarker = ({
         <CardContent>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography
-              pr={2}
               fontWeight="bold"
               gutterBottom
-              variant="body2"
+              variant={isSmallDevice ? "caption" : "body2"}
               component="div"
             >
               <Box
@@ -104,7 +87,10 @@ const ListingMarker = ({
                 {listing.title}
               </Box>
             </Typography>
-            <Typography gutterBottom variant="body2">
+            <Typography
+              gutterBottom
+              variant={isSmallDevice ? "caption" : "body2"}
+            >
               ₪
               {`${Math.ceil(
                 parseInt(listing.price) / listing.duration

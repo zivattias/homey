@@ -71,8 +71,6 @@ const Map = ({ listings }: { listings: FeedListingProps[] }) => {
           height: "100%",
           width: "100%",
           zIndex: "1",
-          margin: 0,
-          p: 0,
         }}
         ref={mapRef}
       >
