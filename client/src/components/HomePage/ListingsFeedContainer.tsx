@@ -3,13 +3,19 @@ import React from "react";
 import ListingFeedCard, { FeedListingProps } from "./ListingFeedCard";
 import Map from "./Map/Map";
 import { useListing } from "../../context/ListingContext";
+import SkeletonContainer from "../DashboardPage/SkeletonContainer";
 
 const ListingsFeedContainer = ({
   listings,
+  loading,
 }: {
   listings: FeedListingProps[];
+  loading: boolean;
 }) => {
   const mapContext = useListing();
+
+  if (loading) return <SkeletonContainer />;
+
   return (
     <Box
       sx={{

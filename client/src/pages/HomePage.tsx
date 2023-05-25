@@ -19,8 +19,10 @@ import { useMediaQuery } from "@mui/material";
 
 export default function HomePage() {
   const isSmallDevice = useMediaQuery("(max-width: 1199px)");
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [listings, setListings] = React.useState<FeedListingProps[]>([]);
   const alert = useAlert();
+  console.log(loading);
   const fetchFeedListings = async () => {
     try {
       const response = await axios.get(
@@ -28,11 +30,13 @@ export default function HomePage() {
       );
       if (response.status == 200) {
         setListings(response.data);
+        setLoading(false);
       }
     } catch (error: any) {
       alert.show("Failed getting listings, please refresh or try later", {
         type: "error",
       });
+      setLoading(false);
     }
   };
 
@@ -44,7 +48,7 @@ export default function HomePage() {
     <>
       <Hero></Hero>
       <ListingProvider>
-        <ListingsFeedContainer listings={listings} />
+        <ListingsFeedContainer listings={listings} loading={loading} />
         {isSmallDevice && <MapButton />}
       </ListingProvider>
     </>
