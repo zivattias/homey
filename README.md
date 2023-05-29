@@ -33,6 +33,7 @@ Homey is written in **Python** and **TypeScript** (React), and hosted on **AWS (
 -   [SimpleJWT](https://github.com/jazzband/djangorestframework-simplejwt) - JSON Web Token library
 -   [React](https://github.com/facebook/react) - User interface framework
 -   [react-router-dom](https://github.com/remix-run/react-router) - Declarative routing for React
+-   [React Query](https://github.com/TanStack/query) - Asynchronous state management, server-state utilities and data fetching for the web
 -   [lottie-react](https://github.com/Gamote/lottie-react) - Lightweight React lib for rendering JSON-based animations
 -   [Vest](https://github.com/ealush/vest) - Declarative validations framework
 
