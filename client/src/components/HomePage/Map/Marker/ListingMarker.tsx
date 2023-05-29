@@ -14,6 +14,7 @@ import { FeedListingProps } from "../../ListingFeedCard";
 import Carousel from "react-material-ui-carousel";
 import ApartmentImage from "../../../DashboardPage/Apartments/ApartmentImage";
 import { useUser } from "../../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const ListingMarker = ({
   listingMarkerRef,
@@ -24,6 +25,7 @@ const ListingMarker = ({
   listing: FeedListingProps;
   map: google.maps.Map;
 }) => {
+  const navigate = useNavigate();
   const user = useUser();
   const isSmallDevice = useMediaQuery("(max-width: 767px)");
 
@@ -116,8 +118,13 @@ const ListingMarker = ({
         </CardContent>
         <CardActions sx={{ p: user.id !== listing.user_id ? 2 : 0 }}>
           {user.id !== listing.user_id && (
-            <Button variant="outlined" color="primary" size="small">
-              Sublet
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              onClick={() => navigate(`listing/${listing.id}`)}
+            >
+              View More
             </Button>
           )}
         </CardActions>

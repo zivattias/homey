@@ -29,6 +29,7 @@ import {
   LISTING_ACTIONS,
   useListingDispatch,
 } from "../../context/ListingContext";
+import { useNavigate } from "react-router-dom";
 
 export interface FeedListingProps {
   id: number;
@@ -71,6 +72,7 @@ const likeIconStyles = {
 };
 
 const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
+  const navigate = useNavigate();
   const isSmallDevice = useMediaQuery("(max-width: 767px)");
   const user = useUser();
   const userDispatch = useUserDispatch();
@@ -296,8 +298,9 @@ const ListingFeedCard = ({ listing }: { listing: FeedListingProps }) => {
           variant="outlined"
           color="primary"
           disabled={user.id === listing.user_id}
+          onClick={() => navigate(`/listing/${listing.id}`)}
         >
-          Sublet
+          View More
         </Button>
       </CardActions>
     </Card>

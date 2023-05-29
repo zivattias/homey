@@ -8,9 +8,11 @@ interface ApartmentPhoto {
 const ApartmentImage = ({
   photoObj,
   index,
+  style = {},
 }: {
   photoObj: ApartmentPhoto | string;
   index: number;
+  style?: React.CSSProperties;
 }) => {
   const [apartmentPicLoading, setApartmentPicLoading] =
     React.useState<boolean>(true);
@@ -33,7 +35,12 @@ const ApartmentImage = ({
       <img
         hidden={apartmentPicLoading}
         src={url}
-        style={{ objectFit: "cover", height: "100%", width: "100%" }}
+        style={{
+          objectFit: "cover",
+          height: "100%",
+          width: "100%",
+          ...style,
+        }}
         key={index}
         onLoad={() => setApartmentPicLoading(false)}
       />

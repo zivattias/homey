@@ -16,11 +16,14 @@ import { useAlert } from "react-alert";
 import AccountPage from "./pages/AccountPage";
 import DashboardPage from "./pages/DashboardPage";
 import { PaletteMode } from "@mui/material";
-import MapButton from "./components/HomePage/MapButton";
+import ListingPage from "./pages/ListingPage";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
+
+const queryClient = new QueryClient();
 
 function App() {
   const userTheme = useMediaQuery(`(prefers-color-scheme: dark)`)
@@ -37,7 +40,6 @@ function App() {
   const [refreshToken] = useLocalStorage("refreshToken", "");
   const [themeMode, setThemeMode] = useLocalStorage("themeMode", userTheme);
 
-  console.log(user);
   React.useEffect(() => {
     const getAccessToken = async () => {
       try {
@@ -103,21 +105,24 @@ function App() {
   );
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Routes>
-          <Route path="/" element={<Root />}>
-            <Route index element={<HomePage />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Routes>
+            <Route path="/" element={<Root />}>
+              <Route index element={<HomePage />} />
+              <Route path="/upload" element={<UploadPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/listing/:listing_id" element={<ListingPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    </QueryClientProvider>
   );
 }
 
