@@ -78,7 +78,7 @@ const ListingPage = () => {
       </>
     );
 
-  if (error) return "Error";
+  if (error) return <div>Error</div>;
 
   const handleLike = async () => {
     const requestMethod = user.likedListings?.includes(data?.id as number)
@@ -116,71 +116,69 @@ const ListingPage = () => {
   };
 
   return (
-    <>
-      <Container sx={{ paddingY: 3 }}>
-        <Box
-          sx={{
-            marginBottom: 2,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h5" fontWeight="bold">
-            {data?.title}
-          </Typography>
-          {user.id !== data?.user_id &&
-            (user.likedListings?.includes(data?.id as number) ? (
-              <FavoriteIcon
-                fontSize="large"
-                color="error"
-                sx={{ ...likeIconStyles }}
-                onClick={() => handleLike()}
-              />
-            ) : (
-              <FavoriteBorderIcon
-                color="error"
-                sx={{ ...likeIconStyles }}
-                onClick={() => {
-                  if (!user.accessToken) {
-                    alert.show("Please log in first", { type: "info" });
-                  } else {
-                    handleLike();
-                  }
-                }}
+    <Container sx={{ paddingY: 3 }}>
+      <Box
+        sx={{
+          marginBottom: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold">
+          {data?.title}
+        </Typography>
+        {user.id !== data?.user_id &&
+          (user.likedListings?.includes(data?.id as number) ? (
+            <FavoriteIcon
+              fontSize="large"
+              color="error"
+              sx={{ ...likeIconStyles }}
+              onClick={() => handleLike()}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              color="error"
+              sx={{ ...likeIconStyles }}
+              onClick={() => {
+                if (!user.accessToken) {
+                  alert.show("Please log in first", { type: "info" });
+                } else {
+                  handleLike();
+                }
+              }}
+            />
+          ))}
+      </Box>
+      <Typography>{data?.description}</Typography>
+      <Divider sx={{ width: "100%", my: 2 }}></Divider>
+      <Grid
+        container
+        columnSpacing={2}
+        rowSpacing={2}
+        justifyContent={"center"}
+      >
+        <Grid item xs={12} md={6}>
+          <Carousel
+            autoPlay={false}
+            height="400px"
+            navButtonsAlwaysVisible={true}
+          >
+            {data?.photos.map((photo, index) => (
+              <ApartmentImage
+                photoObj={photo}
+                index={index}
+                key={index}
+                style={{ borderRadius: "15px" }}
               />
             ))}
-        </Box>
-        <Typography>{data?.description}</Typography>
-        <Divider sx={{ width: "100%", my: 2 }}></Divider>
-        <Grid
-          container
-          columnSpacing={2}
-          rowSpacing={2}
-          justifyContent={"center"}
-        >
-          <Grid item xs={12} md={6}>
-            <Carousel
-              autoPlay={false}
-              height="400px"
-              navButtonsAlwaysVisible={true}
-            >
-              {data?.photos.map((photo, index) => (
-                <ApartmentImage
-                  photoObj={photo}
-                  index={index}
-                  key={index}
-                  style={{ borderRadius: "15px" }}
-                />
-              ))}
-            </Carousel>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <PricingDetails listing={data!} />
-          </Grid>
+          </Carousel>
         </Grid>
-      </Container>
-    </>
+        <Grid item xs={12} md={4}>
+          <PricingDetails listing={data!} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
